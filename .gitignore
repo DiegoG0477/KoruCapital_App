@@ -1,0 +1,28 @@
+# Android
+/build
+/captures
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Gradle
+.gradle/
+caches/
+wrapper/dists/
+daemon/
+.gradletasknamecache
+native/
+.tmp/
+
+# IDE
+.idea/
+*.iml
+local.properties
+.externalNativeBuild
+.cxx/
+
+# Otros
+.DS_Store
+*.log
+*.hprof
