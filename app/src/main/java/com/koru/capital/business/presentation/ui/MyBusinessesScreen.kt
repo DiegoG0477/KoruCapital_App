@@ -1,4 +1,4 @@
-package com.koru.capital.business.presentation
+package com.koru.capital.business.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

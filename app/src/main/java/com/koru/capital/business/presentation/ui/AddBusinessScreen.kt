@@ -1,4 +1,4 @@
-package com.koru.capital.business.presentation
+package com.koru.capital.business.presentation.ui
 
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -24,13 +24,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.ArrowLeft
@@ -52,17 +47,32 @@ import com.composables.icons.lucide.Store
 import com.composables.icons.lucide.Tags
 import com.composables.icons.lucide.TrendingUp
 import com.koru.capital.core.ui.funnelSansFamily
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.*
 
-@Preview(showBackground = true)
+import com.koru.capital.business.presentation.viewmodel.AddBusinessUiState
+import com.koru.capital.business.presentation.viewmodel.AddBusinessViewModel
+
 @Composable
 fun AddBusinessScreen(
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit,
+    viewModel: AddBusinessViewModel = hiltViewModel()
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Column(modifier = Modifier.fillMaxSize()) {
         AddBusinessTop(onBackClick = onBackClick)
-        AddBusinessForm()
+        AddBusinessForm(
+            uiState = uiState,
+            onBusinessNameChanged = viewModel::onBusinessNameChanged,
+            onDescriptionChanged = viewModel::onDescriptionChanged,
+            onInvestmentChanged = viewModel::onInvestmentChanged,
+            onProfitChanged = viewModel::onProfitChanged,
+            onCategoryChanged = viewModel::onCategoryChanged,
+            onBusinessModelChanged = viewModel::onBusinessModelChanged,
+            onMonthlyIncomeChanged = viewModel::onMonthlyIncomeChanged,
+            onSubmit = { viewModel.submitBusiness() }
+        )
     }
 }
 
@@ -94,70 +104,53 @@ private fun AddBusinessTop(onBackClick: () -> Unit) {
 }
 
 @Composable
-private fun AddBusinessForm() {
-    var businessName by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var investment by remember { mutableStateOf("") }
-    var profit by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf("") }
-    var businessModel by remember { mutableStateOf("") }
-    var monthlyIncome by remember { mutableStateOf("") }
-
+private fun AddBusinessForm(
+    uiState: AddBusinessUiState,
+    onBusinessNameChanged: (String) -> Unit,
+    onDescriptionChanged: (String) -> Unit,
+    onInvestmentChanged: (String) -> Unit,
+    onProfitChanged: (String) -> Unit,
+    onCategoryChanged: (String) -> Unit,
+    onBusinessModelChanged: (String) -> Unit,
+    onMonthlyIncomeChanged: (String) -> Unit,
+    onSubmit: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
-        // Imagen del Negocio
-        FormSection(
-            title = "Imagen del Negocio",
-            icon = Lucide.Image
-        ) {
-            ImageUploadBox(
-                onImageSelected = { /* Handle image selection */ }
-            )
+        // Imagen del Negocio (se puede implementar como componente reutilizable)
+        FormSection(title = "Imagen del Negocio", icon = Lucide.Image) {
+            ImageUploadBox(onImageSelected = { /* Handle image selection */ })
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Nombre del Negocio
-        FormSection(
-            title = "Nombre del Negocio",
-            icon = Lucide.Store
-        ) {
+        FormSection(title = "Nombre del Negocio", icon = Lucide.Store) {
             OutlinedTextField(
-                value = businessName,
-                onValueChange = { businessName = it },
+                value = uiState.businessName,
+                onValueChange = onBusinessNameChanged,
                 placeholder = { Text("Ej. FreshMex") },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0XFFCC5500),
-                    unfocusedBorderColor = Color.Gray
-                )
+                shape = RoundedCornerShape(8.dp)
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Descripción
-        FormSection(
-            title = "Descripción",
-            icon = Lucide.FileText
-        ) {
+        FormSection(title = "Descripción", icon = Lucide.FileText) {
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = uiState.description,
+                onValueChange = onDescriptionChanged,
                 placeholder = { Text("Breve descripción de tu negocio y sus ventajas competitivas") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0XFFCC5500),
-                    unfocusedBorderColor = Color.Gray
-                )
+                shape = RoundedCornerShape(8.dp)
             )
         }
 
@@ -169,40 +162,58 @@ private fun AddBusinessForm() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                FormSection(
-                    title = "Inversión (MXN)",
-                    icon = Lucide.DollarSign
-                ) {
+                FormSection(title = "Inversión (MXN)", icon = Lucide.DollarSign) {
                     OutlinedTextField(
-                        value = investment,
-                        onValueChange = { investment = it },
+                        value = uiState.investment,
+                        onValueChange = onInvestmentChanged,
                         placeholder = { Text("Ej. 500000") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0XFFCC5500),
-                            unfocusedBorderColor = Color.Gray
-                        ),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                }
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                FormSection(title = "Ganancia (%)", icon = Lucide.TrendingUp) {
+                    OutlinedTextField(
+                        value = uiState.profitPercentage,
+                        onValueChange = onProfitChanged,
+                        placeholder = { Text("Ej. 35") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                FormSection(title = "Estado", icon = Lucide.DollarSign) {
+                    OutlinedTextField(
+                        value = uiState.investment,
+                        onValueChange = onInvestmentChanged,
+                        placeholder = { Text("Ej. 500000") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                 }
             }
 
             Column(modifier = Modifier.weight(1f)) {
-                FormSection(
-                    title = "Ganancia (%)",
-                    icon = Lucide.TrendingUp
-                ) {
+                FormSection(title = "Municipio", icon = Lucide.TrendingUp) {
                     OutlinedTextField(
-                        value = profit,
-                        onValueChange = { profit = it },
+                        value = uiState.profitPercentage,
+                        onValueChange = onProfitChanged,
                         placeholder = { Text("Ej. 35") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0XFFCC5500),
-                            unfocusedBorderColor = Color.Gray
-                        ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                 }
@@ -212,24 +223,17 @@ private fun AddBusinessForm() {
         Spacer(modifier = Modifier.height(24.dp))
 
         // Categoría
-        FormSection(
-            title = "Categoría",
-            icon = Lucide.Tags
-        ) {
+        FormSection(title = "Categoría", icon = Lucide.Tags) {
             OutlinedTextField(
-                value = selectedCategory,
-                onValueChange = { },
+                value = uiState.category,
+                onValueChange = onCategoryChanged,
                 placeholder = { Text("Selecciona categoría") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0XFFCC5500),
-                    unfocusedBorderColor = Color.Gray
-                ),
                 readOnly = true,
                 trailingIcon = {
                     Icon(
-                        Lucide.ChevronDown,
+                        imageVector = Lucide.ChevronDown,
                         contentDescription = "Seleccionar categoría",
                         tint = Color.Gray
                     )
@@ -240,42 +244,28 @@ private fun AddBusinessForm() {
         Spacer(modifier = Modifier.height(24.dp))
 
         // Modelo de Negocio
-        FormSection(
-            title = "Modelo de Negocio",
-            icon = Lucide.Star
-        ) {
+        FormSection(title = "Modelo de Negocio", icon = Lucide.Star) {
             OutlinedTextField(
-                value = businessModel,
-                onValueChange = { businessModel = it },
+                value = uiState.businessModel,
+                onValueChange = onBusinessModelChanged,
                 placeholder = { Text("Describe brevemente cómo genera ingresos el negocio") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0XFFCC5500),
-                    unfocusedBorderColor = Color.Gray
-                )
+                shape = RoundedCornerShape(8.dp)
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Ingresos Mensuales
-        FormSection(
-            title = "Ingresos Mensuales (MXN)",
-            icon = Lucide.DollarSign
-        ) {
+        FormSection(title = "Ingresos Mensuales (MXN)", icon = Lucide.DollarSign) {
             OutlinedTextField(
-                value = monthlyIncome,
-                onValueChange = { monthlyIncome = it },
+                value = uiState.monthlyIncome,
+                onValueChange = onMonthlyIncomeChanged,
                 placeholder = { Text("Ej. 120000") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0XFFCC5500),
-                    unfocusedBorderColor = Color.Gray
-                ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
@@ -284,13 +274,11 @@ private fun AddBusinessForm() {
 
         // Botón Publicar
         Button(
-            onClick = { /* Handle publish */ },
+            onClick = onSubmit,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0XFFCC5500)
-            ),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFCC5500)),
             shape = RoundedCornerShape(35.dp)
         ) {
             Text(

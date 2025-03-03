@@ -11,8 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.koru.capital.core.ui.components.BottomNav
 import com.koru.capital.core.ui.navigation.NavItem
-import com.koru.capital.home.presentation.HomeScreen
-import com.koru.capital.business.presentation.MyBusinessesScreen
+import com.koru.capital.home.presentation.ui.HomeScreen
+import com.koru.capital.business.presentation.ui.MyBusinessesScreen
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,7 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.navigation
-import com.koru.capital.business.presentation.AddBusinessScreen
+import com.koru.capital.business.presentation.ui.AddBusinessScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
