@@ -6,22 +6,24 @@ Aplicación Android desarrollada con [Kotlin](https://kotlinlang.org/) y [Jetpac
 
 El proyecto sigue una arquitectura limpia (Clean Architecture) con las siguientes capas:
 
+```plaintext
 /app
 ├── src
-│ ├── main
-│ │ ├── java/com/koru/capital
-│ │ │ ├── data
-│ │ │ │ ├── local # Configuración de Room, entidades, DAOs
-│ │ │ │ ├── remote # Configuración de Retrofit, servicios API
-│ │ │ │ └── repository # Implementación de repositorios
-│ │ │ ├── domain
-│ │ │ │ ├── model # Entidades o modelos de negocio
-│ │ │ │ └── usecase # Casos de uso
-│ │ │ ├── presentation
-│ │ │ │ ├── ui # Actividades, fragments o composables (Jetpack Compose)
-│ │ │ │ └── viewmodel # Clases ViewModel
-│ │ │ └── di # Configuración de inyección de dependencias (Hilt, Koin, etc.)
-│ │ └── res # Recursos (layouts, drawables, etc.)
+│   ├── main
+│   │   ├── java/com/koru/capital
+│   │   │   ├── data
+│   │   │   │   ├── local          # Configuración de Room, entidades, DAOs
+│   │   │   │   ├── remote         # Configuración de Retrofit, servicios API
+│   │   │   │   └── repository     # Implementación de repositorios
+│   │   │   ├── domain
+│   │   │   │   ├── model          # Entidades o modelos de negocio
+│   │   │   │   └── usecase        # Casos de uso
+│   │   │   ├── presentation
+│   │   │   │   ├── ui            # Actividades, fragments o composables (Jetpack Compose)
+│   │   │   │   └── viewmodel     # Clases ViewModel
+│   │   │   └── di                # Configuración de inyección de dependencias (Hilt, Koin, etc.)
+│   │   └── res                   # Recursos (layouts, drawables, etc.)
+```
 
 ### Capas principales
 
