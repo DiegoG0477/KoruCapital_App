@@ -21,7 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.navigation
 import com.koru.capital.business.presentation.ui.AddBusinessScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
