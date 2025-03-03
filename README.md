@@ -1,8 +1,31 @@
+# KoruCapital App
+
+Aplicación Android desarrollada con [Kotlin](https://kotlinlang.org/) y [Jetpack Compose](https://developer.android.com/jetpack/compose).
+
+## Arquitectura
+
+El proyecto sigue una arquitectura limpia (Clean Architecture) con las siguientes capas:
+
+/app
+├── src
+│ ├── main
+│ │ ├── java/com/koru/capital
+│ │ │ ├── data
+│ │ │ │ ├── local # Configuración de Room, entidades, DAOs
+│ │ │ │ ├── remote # Configuración de Retrofit, servicios API
+│ │ │ │ └── repository # Implementación de repositorios
+│ │ │ ├── domain
+│ │ │ │ ├── model # Entidades o modelos de negocio
+│ │ │ │ └── usecase # Casos de uso
+│ │ │ ├── presentation
+│ │ │ │ ├── ui # Actividades, fragments o composables (Jetpack Compose)
+│ │ │ │ └── viewmodel # Clases ViewModel
+│ │ │ └── di # Configuración de inyección de dependencias (Hilt, Koin, etc.)
+│ │ └── res # Recursos (layouts, drawables, etc.)
 
 ### Capas principales
 
 1. **Data**:
-   - **Local**: Persistencia de datos con Room.
    - **Remote**: Comunicación con APIs mediante Retrofit.
    - **Repository**: Implementación de repositorios que unifican el acceso a datos locales y remotos.
 
