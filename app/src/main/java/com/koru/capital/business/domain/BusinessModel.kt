@@ -5,7 +5,8 @@ data class Business(
     val description: String,
     val investment: Double,
     val profitPercentage: Double,
-    val category: String,
+    val categoryId: Number,
     val businessModel: String,
-    val monthlyIncome: Double
+    val monthlyIncome: Double,
+    val municipalityId: Number
 )

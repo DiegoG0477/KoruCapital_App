@@ -1,4 +1,4 @@
-package com.koru.capital.core.ui.data.dto
+package com.koru.capital.core.data.dto
 
 data class ResponseDto(
     val success: Boolean,

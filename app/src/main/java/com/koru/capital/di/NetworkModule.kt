@@ -1,6 +1,7 @@
 package com.koru.capital.di
 
 import com.koru.capital.business.data.remote.BusinessApiService
+import com.koru.capital.core.data.remote.LocationApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +26,11 @@ object NetworkModule {
     @Singleton
     fun provideBusinessApiService(retrofit: Retrofit): BusinessApiService {
         return retrofit.create(BusinessApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationApiService(retrofit: Retrofit): LocationApiService {
+        return retrofit.create(LocationApiService::class.java)
     }
 }

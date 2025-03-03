@@ -4,29 +4,13 @@ import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,22 +20,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composables.icons.lucide.ArrowLeft
-import com.composables.icons.lucide.ChevronDown
-import com.composables.icons.lucide.DollarSign
-import com.composables.icons.lucide.FileText
-import com.composables.icons.lucide.Image
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Star
-import com.composables.icons.lucide.Store
-import com.composables.icons.lucide.Tags
-import com.composables.icons.lucide.TrendingUp
-import com.koru.capital.core.ui.funnelSansFamily
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.runtime.*
-
+import com.composables.icons.lucide.*
 import com.koru.capital.business.presentation.viewmodel.AddBusinessUiState
 import com.koru.capital.business.presentation.viewmodel.AddBusinessViewModel
+import com.koru.capital.core.domain.model.Category
+import com.koru.capital.core.domain.model.Municipality
+import com.koru.capital.core.domain.model.State
+import com.koru.capital.core.ui.funnelSansFamily
 
 @Composable
 fun AddBusinessScreen(
@@ -62,17 +38,67 @@ fun AddBusinessScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         AddBusinessTop(onBackClick = onBackClick)
-        AddBusinessForm(
-            uiState = uiState,
-            onBusinessNameChanged = viewModel::onBusinessNameChanged,
-            onDescriptionChanged = viewModel::onDescriptionChanged,
-            onInvestmentChanged = viewModel::onInvestmentChanged,
-            onProfitChanged = viewModel::onProfitChanged,
-            onCategoryChanged = viewModel::onCategoryChanged,
-            onBusinessModelChanged = viewModel::onBusinessModelChanged,
-            onMonthlyIncomeChanged = viewModel::onMonthlyIncomeChanged,
-            onSubmit = { viewModel.submitBusiness() }
-        )
+
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Color(0XFFCC5500))
+            }
+        } else if (uiState.isSuccess) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        Lucide.CircleCheck,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = Color(0XFFCC5500)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "¡Negocio creado con éxito!",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0XFFCC5500),
+                        fontFamily = funnelSansFamily
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Button(
+                        onClick = onBackClick,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFCC5500)),
+                        shape = RoundedCornerShape(35.dp)
+                    ) {
+                        Text(
+                            text = "Volver",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = funnelSansFamily
+                        )
+                    }
+                }
+            }
+        } else {
+            AddBusinessForm(
+                uiState = uiState,
+                onBusinessNameChanged = viewModel::onBusinessNameChanged,
+                onDescriptionChanged = viewModel::onDescriptionChanged,
+                onInvestmentChanged = viewModel::onInvestmentChanged,
+                onProfitChanged = viewModel::onProfitChanged,
+                onCategoryChanged = viewModel::onCategoryChanged,
+                onStateChanged = viewModel::onStateChanged,
+                onMunicipalityChanged = viewModel::onMunicipalityChanged,
+                onBusinessModelChanged = viewModel::onBusinessModelChanged,
+                onMonthlyIncomeChanged = viewModel::onMonthlyIncomeChanged,
+                onSubmit = { viewModel.submitBusiness() }
+            )
+        }
     }
 }
 
@@ -111,6 +137,8 @@ private fun AddBusinessForm(
     onInvestmentChanged: (String) -> Unit,
     onProfitChanged: (String) -> Unit,
     onCategoryChanged: (String) -> Unit,
+    onStateChanged: (String) -> Unit,
+    onMunicipalityChanged: (String) -> Unit,
     onBusinessModelChanged: (String) -> Unit,
     onMonthlyIncomeChanged: (String) -> Unit,
     onSubmit: () -> Unit
@@ -121,7 +149,19 @@ private fun AddBusinessForm(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
-        // Imagen del Negocio (se puede implementar como componente reutilizable)
+        // Mensaje de error si existe
+        uiState.errorMessage?.let { errorMessage ->
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+        }
+
+        // Imagen del Negocio
         FormSection(title = "Imagen del Negocio", icon = Lucide.Image) {
             ImageUploadBox(onImageSelected = { /* Handle image selection */ })
         }
@@ -189,32 +229,27 @@ private fun AddBusinessForm(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Estado y Municipio
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                FormSection(title = "Estado", icon = Lucide.DollarSign) {
-                    OutlinedTextField(
-                        value = uiState.investment,
-                        onValueChange = onInvestmentChanged,
-                        placeholder = { Text("Ej. 500000") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                FormSection(title = "Estado", icon = Lucide.MapPin) {
+                    StateDropdown(
+                        states = uiState.states,
+                        selectedStateId = uiState.selectedStateId,
+                        onStateSelected = onStateChanged
                     )
                 }
             }
-
             Column(modifier = Modifier.weight(1f)) {
-                FormSection(title = "Municipio", icon = Lucide.TrendingUp) {
-                    OutlinedTextField(
-                        value = uiState.profitPercentage,
-                        onValueChange = onProfitChanged,
-                        placeholder = { Text("Ej. 35") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                FormSection(title = "Municipio", icon = Lucide.MapPin) {
+                    MunicipalityDropdown(
+                        municipalities = uiState.municipalities,
+                        selectedMunicipalityId = uiState.selectedMunicipalityId,
+                        onMunicipalitySelected = onMunicipalityChanged,
+                        enabled = uiState.selectedStateId.isNotEmpty()
                     )
                 }
             }
@@ -224,20 +259,10 @@ private fun AddBusinessForm(
 
         // Categoría
         FormSection(title = "Categoría", icon = Lucide.Tags) {
-            OutlinedTextField(
-                value = uiState.category,
-                onValueChange = onCategoryChanged,
-                placeholder = { Text("Selecciona categoría") },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                readOnly = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = Lucide.ChevronDown,
-                        contentDescription = "Seleccionar categoría",
-                        tint = Color.Gray
-                    )
-                }
+            CategoryDropdown(
+                categories = uiState.categories,
+                selectedCategoryId = uiState.selectedCategoryId,
+                onCategorySelected = onCategoryChanged
             )
         }
 
@@ -290,6 +315,151 @@ private fun AddBusinessForm(
         }
 
         Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun StateDropdown(
+    states: List<State>,
+    selectedStateId: String,
+    onStateSelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedState = states.find { it.id == selectedStateId }
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = selectedState?.name ?: "",
+            onValueChange = { },
+            readOnly = true,
+            placeholder = { Text("Selecciona un estado") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = true },
+            shape = RoundedCornerShape(8.dp),
+            trailingIcon = {
+                Icon(
+                    Lucide.ChevronDown,
+                    contentDescription = "Expandir",
+                    tint = Color.Gray
+                )
+            }
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            states.forEach { state ->
+                DropdownMenuItem(
+                    text = { Text(state.name) },
+                    onClick = {
+                        onStateSelected(state.id)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MunicipalityDropdown(
+    municipalities: List<Municipality>,
+    selectedMunicipalityId: String,
+    onMunicipalitySelected: (String) -> Unit,
+    enabled: Boolean
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedMunicipality = municipalities.find { it.id == selectedMunicipalityId }
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = selectedMunicipality?.name ?: "",
+            onValueChange = { },
+            readOnly = true,
+            enabled = enabled,
+            placeholder = {
+                Text(
+                    if (enabled) "Selecciona un municipio"
+                    else "Selecciona primero un estado"
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled) { expanded = true },
+            shape = RoundedCornerShape(8.dp),
+            trailingIcon = {
+                Icon(
+                    Lucide.ChevronDown,
+                    contentDescription = "Expandir",
+                    tint = if (enabled) Color.Gray else Color.LightGray
+                )
+            }
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            municipalities.forEach { municipality ->
+                DropdownMenuItem(
+                    text = { Text(municipality.name) },
+                    onClick = {
+                        onMunicipalitySelected(municipality.id)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryDropdown(
+    categories: List<Category>,
+    selectedCategoryId: String,
+    onCategorySelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedCategory = categories.find { it.id == selectedCategoryId }
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = selectedCategory?.name ?: "",
+            onValueChange = { },
+            readOnly = true,
+            placeholder = { Text("Selecciona una categoría") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = true },
+            shape = RoundedCornerShape(8.dp),
+            trailingIcon = {
+                Icon(
+                    Lucide.ChevronDown,
+                    contentDescription = "Expandir",
+                    tint = Color.Gray
+                )
+            }
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            categories.forEach { category ->
+                DropdownMenuItem(
+                    text = { Text(category.name) },
+                    onClick = {
+                        onCategorySelected(category.id)
+                        expanded = false
+                    }
+                )
+            }
+        }
     }
 }
 

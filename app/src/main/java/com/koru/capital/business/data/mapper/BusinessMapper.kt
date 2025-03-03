@@ -1,6 +1,6 @@
 package com.koru.capital.business.data.mapper
 
-import com.koru.capital.business.data.remote.dto.AddBusinessRequestDto
+import com.koru.capital.business.data.dto.AddBusinessRequestDto
 import com.koru.capital.business.domain.Business
 
 fun Business.toAddBusinessRequestDto(): AddBusinessRequestDto {
@@ -9,7 +9,8 @@ fun Business.toAddBusinessRequestDto(): AddBusinessRequestDto {
         description = this.description,
         investment = this.investment,
         profitPercentage = this.profitPercentage,
-        category = this.category,
+        categoryId = this.categoryId,
+        municipalityId = this.municipalityId,
         businessModel = this.businessModel,
         monthlyIncome = this.monthlyIncome
     )

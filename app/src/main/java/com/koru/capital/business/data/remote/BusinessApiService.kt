@@ -1,7 +1,7 @@
 package com.koru.capital.business.data.remote
 
-import com.koru.capital.business.data.remote.dto.AddBusinessRequestDto
-import com.koru.capital.core.ui.data.dto.ResponseDto
+import com.koru.capital.business.data.dto.AddBusinessRequestDto
+import com.koru.capital.core.data.dto.ResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
