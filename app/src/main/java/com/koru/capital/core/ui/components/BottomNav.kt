@@ -7,26 +7,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.Color
 import com.koru.capital.core.ui.navigation.NavItem
+import com.koru.capital.core.ui.theme.* // Import theme colors
 
 @Composable
 fun BottomNav(
-    currentRoute: String,
-    onNavigate: (String) -> Unit
+    currentRoute: String?, // Route can be null initially or during transitions
+    onNavigate: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val navItems = listOf(
         NavItem.Home,
-        NavItem.Apoyos,
-        NavItem.MisNegocios,
-        NavItem.MiCuenta
+        NavItem.AddBusiness, // Updated name
+        NavItem.MyBusinesses, // Updated name
+        NavItem.MyAccount // Updated name
     )
 
     NavigationBar(
-        modifier = Modifier.height(60.dp),
-        containerColor = Color(0xFFF5F5F5)
+        modifier = modifier.height(60.dp),
+        containerColor = KoruGrayBackground // Use theme color
     ) {
         navItems.forEach { navItem ->
+            // Determine if the current route is part of this nav item's hierarchy
+            val selected = currentRoute?.startsWith(navItem.route) == true
+
             NavigationBarItem(
                 icon = {
                     Icon(
@@ -43,14 +47,19 @@ fun BottomNav(
                         overflow = TextOverflow.Ellipsis
                     )
                 },
-                selected = currentRoute == navItem.route,
-                onClick = { onNavigate(navItem.route) },
+                selected = selected,
+                onClick = {
+                    // Navigate only if not already selected to avoid redundant navigation
+                    if (!selected) {
+                        onNavigate(navItem.route)
+                    }
+                },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color(0XFFCC5500),
-                    selectedTextColor = Color(0XFFCC5500),
-                    unselectedIconColor = Color.Gray,
-                    unselectedTextColor = Color.Gray,
-                    indicatorColor = Color.Transparent
+                    selectedIconColor = KoruOrange, // Use theme color
+                    selectedTextColor = KoruOrange, // Use theme color
+                    unselectedIconColor = KoruDarkGray, // Use theme color
+                    unselectedTextColor = KoruDarkGray, // Use theme color
+                    indicatorColor = KoruTransparent // Use theme color
                 ),
                 alwaysShowLabel = true
             )

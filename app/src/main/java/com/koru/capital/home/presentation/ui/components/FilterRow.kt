@@ -1,9 +1,11 @@
 package com.koru.capital.home.presentation.ui.components
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -14,46 +16,35 @@ import com.composables.icons.lucide.Grid2x2Check
 import com.composables.icons.lucide.ListFilter
 import com.composables.icons.lucide.Lucide
 
-sealed class FilterItem(
-    val icon: ImageVector,
-    val label: String,
-    val action: () -> Unit
-) {
-    object NearMe : FilterItem(
-        icon = Lucide.Compass,
-        label = "Cerca de mí",
-        action = { /* Acción cuando se selecciona */ }
-    )
-
-    object LessThan50K : FilterItem(
-        icon = Lucide.DollarSign,
-        label = "0 - 50k",
-        action = { /* Acción cuando se selecciona */ }
-    )
-
-    object Category : FilterItem(
-        icon = Lucide.Grid2x2Check,
-        label = "Categoría",
-        action = { /* Acción cuando se selecciona */ }
-    )
-
-    object FilterBtn : FilterItem(
-        icon = Lucide.ListFilter,
-        label = "",
-        action = { /* Acción cuando se selecciona */ }
-    )
+// Enum definition remains the same
+enum class FilterType(val icon: ImageVector, val label: String) {
+    NEAR_ME(Lucide.Compass, "Cerca de mí"),
+    LESS_THAN_50K(Lucide.DollarSign, "0 - 50k"),
+    CATEGORY(Lucide.Grid2x2Check, "Categoría"),
+    MORE_FILTERS(Lucide.ListFilter, "") // Button for more complex filters
 }
 
 @Composable
-fun FilterRow(filters: List<FilterItem>) {
+fun FilterRow(
+    activeFilters: Set<FilterType>, // Current active filters from ViewModel state
+    onFilterClick: (FilterType) -> Unit, // Callback to ViewModel when a filter is clicked
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(top = 13.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .horizontalScroll(rememberScrollState()) // Allow scrolling if filters overflow
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp) // Space between buttons
     ) {
-        filters.forEach { filter ->
-            FilterButton(filter)
+        // Iterate through all defined filter types
+        FilterType.values().forEach { filterType ->
+            FilterButton(
+                text = filterType.label,
+                icon = filterType.icon,
+                onClick = { onFilterClick(filterType) }, // Call the ViewModel callback
+                isActive = activeFilters.contains(filterType) // Check if this filter is in the active set
+            )
         }
     }
 }

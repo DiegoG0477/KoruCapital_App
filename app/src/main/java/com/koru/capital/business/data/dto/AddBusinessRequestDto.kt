@@ -8,5 +8,6 @@ data class AddBusinessRequestDto(
     val categoryId: Number,
     val municipalityId: Number,
     val businessModel: String,
-    val monthlyIncome: Double
+    val monthlyIncome: Double,
+    val imageUrl: String?
 )

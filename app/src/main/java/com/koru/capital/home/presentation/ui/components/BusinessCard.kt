@@ -1,194 +1,213 @@
 package com.koru.capital.home.presentation.ui.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composables.icons.lucide.BadgeDollarSign
-import com.composables.icons.lucide.Bookmark
-import com.composables.icons.lucide.Car
-import com.composables.icons.lucide.Handshake
-import com.composables.icons.lucide.Linkedin
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.MapPin
-import com.composables.icons.lucide.MessageCircle
-import com.composables.icons.lucide.Users
-import com.koru.capital.R
+import coil3.compose.AsyncImage // Import Coil for image loading
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.transformations
+import com.composables.icons.lucide.*
+import com.koru.capital.R // Assuming sample images are in drawable
 import com.koru.capital.core.ui.funnelSansFamily
+import com.koru.capital.home.presentation.viewmodel.BusinessCardUiModel
+import com.koru.capital.core.ui.theme.* // Import theme colors
 
 @Composable
-fun BusinessCard() {
-    Box(modifier = Modifier.fillMaxWidth()) {
+fun BusinessCard(
+    business: BusinessCardUiModel,
+    onSaveClick: () -> Unit,
+    onLikeClick: () -> Unit,
+    onCardClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card( // Wrap content in a Card for better elevation and structure
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onCardClick), // Make the whole card clickable
+        shape = RoundedCornerShape(12.dp), // Consistent corner rounding
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = KoruWhite)
+    ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            Image(
-                painter = painterResource(id = R.drawable.sample_business),
-                contentDescription = "Sample Business",
+            // --- Image Section ---
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(business.imageUrl ?: R.drawable.sample_business) // Use actual URL or placeholder
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(R.drawable.sample_business), // Placeholder while loading
+                error = painterResource(R.drawable.sample_business), // Placeholder on error
+                contentDescription = business.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp)
-                    .clip(RoundedCornerShape(9.dp))
+                // No clip needed here as Card clips content
             )
 
-            Text(
-                modifier = Modifier.padding(top = 10.dp),
-                text = "SLICE: The World's First Nipper with Dual Replaceable Blades  Effortless Precision, Endless Possibilities",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Medium,
-                fontFamily = funnelSansFamily,
-                textAlign = TextAlign.Start
-            )
+            // --- Content Padding ---
+            Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
 
-            Row(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                BusinessTag(icon = Lucide.Car, text = "Automóviles")
-                BusinessTag(icon = Lucide.MapPin, text = "Tuxtla Gutiérrez")
-                BusinessTag(icon = Lucide.BadgeDollarSign, text = "5k - 25k")
-                Icon(
-                    Lucide.Users,
-                    modifier = Modifier.height(19.dp),
-                    contentDescription = "partners_quantity",
-                    //tint = Color.DarkGray
-                    tint = Color(0XFF993c07)
+                // --- Title ---
+                Text(
+                    text = business.title,
+                    fontSize = 16.sp, // Slightly larger title
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = funnelSansFamily,
+                    textAlign = TextAlign.Start,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis // Handle long titles
                 )
-            }
 
-            Text(
-                modifier = Modifier.padding(top = 9.dp),
-                text = "SolidServicios es una empresa Mexicana, proveedora de soluciones de ingeniería para el área de diseño y manufactura industrial. Buscamos Ser la mejor alternativa en la implantación de soluciones CAD/CAM/CAE y servicios enfocados al diseño y desarrollo de productos en la industria manufacturera.",
-                fontFamily = funnelSansFamily
-            )
-
-            Text(
-                modifier = Modifier.padding(top = 12.dp),
-                text = "Modelo de negocio:",
-                color = Color(0XFFCC5500),
-                fontSize = 12.sp,
-                fontFamily = funnelSansFamily
-            )
-
-            Text(
-                modifier = Modifier.padding(top = 9.dp),
-                text = "B2B con contratos anuales y logística propia",
-                fontFamily = funnelSansFamily
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 14.dp)
-            ) {
+                // --- Tags Section ---
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                            width = 1.dp,
-                            color = Color.Gray,
-                            shape = RoundedCornerShape(35.dp)
-                        )
-                        .padding(8.dp),
+                        .padding(top = 8.dp)
+                        .fillMaxWidth(),
+                    // SpaceBetween might create too much space, consider Start or SpacedBy
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    business.category?.let { BusinessTag(icon = Lucide.Tag, text = it) } // Use Tag icon
+                    business.location?.let { BusinessTag(icon = Lucide.MapPin, text = it) }
+                    business.investmentRange?.let { BusinessTag(icon = Lucide.BadgeDollarSign, text = it) }
+                    business.partnerCount?.let {
+                        // Only show if count is > 0 or handle 0 explicitly if needed
+                        if (it > 0) {
+                            BusinessTag(icon = Lucide.Users, text = "$it socios")
+                        }
+                    }
+                }
+
+                // --- Description ---
+                Text(
+                    modifier = Modifier.padding(top = 9.dp),
+                    text = business.description,
+                    fontFamily = funnelSansFamily,
+                    fontSize = 14.sp,
+                    maxLines = 3, // Limit description lines in card view
+                    overflow = TextOverflow.Ellipsis,
+                    color = KoruDarkGray
+                )
+
+                // --- Business Model ---
+                Text(
+                    modifier = Modifier.padding(top = 12.dp),
+                    text = "Modelo de negocio:",
+                    color = KoruOrange,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium, // Highlight label slightly
+                    fontFamily = funnelSansFamily
+                )
+                Text(
+                    modifier = Modifier.padding(top = 4.dp), // Reduced padding
+                    text = business.businessModel,
+                    fontFamily = funnelSansFamily,
+                    fontSize = 14.sp, // Match description size
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                // --- Owner and Actions Footer ---
+                Divider(modifier = Modifier.padding(vertical = 10.dp), color = KoruGrayBackground) // Add visual separator
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
+                    // Owner Info
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f).padding(end = 8.dp) // Allow shrinking, add padding
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.sample_profile),
-                            contentDescription = "Sample Profile",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .height(26.dp)
-                                .width(26.dp)
-                                .clip(CircleShape)
-                        )
-
-                        Spacer(modifier = Modifier.width(7.dp))
-
-                        Text(
-                            text = "Daniel Rodríguez",
-                            fontFamily = funnelSansFamily,
-                            fontWeight = FontWeight.Bold
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(business.ownerImageUrl ?: R.drawable.sample_profile) // Placeholder if null
+                                .crossfade(true)
+                                .transformations(coil3.transform.CircleCropTransformation()) // Circle crop
+                                .build(),
+                            placeholder = painterResource(R.drawable.sample_profile),
+                            error = painterResource(R.drawable.sample_profile),
+                            contentDescription = "Owner Profile",
+                            modifier = Modifier.size(32.dp) // Slightly larger profile pic
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
 
-                        Icon(
-                            Lucide.MessageCircle,
-                            modifier = Modifier.height(20.dp),
-                            contentDescription = "message",
-                            tint = Color.DarkGray
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Icon(
-                            Lucide.Linkedin,
-                            modifier = Modifier.height(20.dp),
-                            contentDescription = "linkedin",
-                            tint = Color.DarkGray
-                        )
+                        business.ownerName?.let {
+                            Text(
+                                text = it,
+                                fontFamily = funnelSansFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        // Add Message/LinkedIn icons here if needed later
+                        // IconButton(...) { Icon(...) }
                     }
 
-                    // Iconos de partnership y guardados
+                    // Action Icons (Like, Save)
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End // Align icons to the end
                     ) {
-                        Icon(
-                            Lucide.Handshake,
-                            modifier = Modifier.height(21.dp),
-                            contentDescription = "partnership",
-                            tint = Color.DarkGray
-                        )
-
-                        Spacer(modifier = Modifier.width(5.dp))
-
-                        Icon(
-                            Lucide.Bookmark,
-                            modifier = Modifier.height(21.dp),
-                            contentDescription = "saves_quantity",
-                            tint = Color.DarkGray
-                        )
-
-                        Spacer(modifier = Modifier.width(3.dp))
-
-                        Text(
-                            text = "54",
-                            fontFamily = funnelSansFamily,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
-                        )
+                        // Like Button (Placeholder - implement toggle visually later)
+                        IconButton(onClick = onLikeClick, modifier = Modifier.size(40.dp)) { // Consistent touch target size
+                            Icon(
+                                if (business.isLiked) Lucide.Heart else Lucide.Heart, // Use filled icon when liked
+                                contentDescription = "Like",
+                                tint = if (business.isLiked) KoruRed else KoruDarkGray, // Change color when liked
+                                modifier = Modifier.size(21.dp)
+                            )
+                        }
+                        // Save Button with Count
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable(onClick = onSaveClick) // Make row clickable
+                                .padding(start = 4.dp) // Add slight space from like
+                        ) {
+                            IconButton(onClick = onSaveClick, modifier = Modifier.size(40.dp)) {
+                                Icon(
+                                    if (business.isSaved) Lucide.BookmarkCheck else Lucide.Bookmark, // Use filled icon when saved
+                                    contentDescription = "Guardar",
+                                    tint = if (business.isSaved) KoruOrange else KoruDarkGray, // Change color when saved
+                                    modifier = Modifier.size(21.dp)
+                                )
+                            }
+                            business.savedCount?.let { count ->
+                                // Only show count if > 0, or adjust as needed
+                                if (count > 0) {
+                                    Text(
+                                        text = count.toString(),
+                                        fontFamily = funnelSansFamily,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 14.sp,
+                                        color = if (business.isSaved) KoruOrange else KoruDarkGray,
+                                        modifier = Modifier.padding(start = 0.dp, end = 4.dp) // Adjust padding
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
-
         }
     }
 }

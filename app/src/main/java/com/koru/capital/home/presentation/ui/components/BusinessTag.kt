@@ -5,47 +5,49 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.koru.capital.core.ui.funnelSansFamily
+import com.koru.capital.core.ui.theme.KoruDarkOrange
+import com.koru.capital.core.ui.theme.KoruLightYellow
+
 
 @Composable
 fun BusinessTag(
     icon: ImageVector,
-    text: String? = null,
-    contentDescription: String? = null
+    text: String, // Text is now mandatory for this version
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .background(
-                color = Color(0XFFFFF4C4),
+                color = KoruLightYellow, // Use theme color
                 shape = RoundedCornerShape(35.dp)
             )
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(5.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp) // Reduced space
     ) {
         Icon(
             icon,
-            modifier = Modifier.height(16.dp),
-            contentDescription = contentDescription ?: text,
-            tint = Color(0XFF993C07)
+            modifier = Modifier.size(14.dp), // Slightly smaller icon
+            contentDescription = null, // Content description handled by text
+            tint = KoruDarkOrange // Use theme color
         )
-        text?.let {
-            Text(
-                text = it,
-                color = Color(0XFF993C07),
-                fontSize = 12.sp,
-                fontFamily = funnelSansFamily
-            )
-        }
+        Text(
+            text = text,
+            color = KoruDarkOrange, // Use theme color
+            fontSize = 11.sp, // Slightly smaller text
+            fontFamily = funnelSansFamily,
+            maxLines = 1 // Ensure tag text doesn't wrap excessively
+        )
     }
 }
