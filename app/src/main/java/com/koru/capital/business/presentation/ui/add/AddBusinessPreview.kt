@@ -32,8 +32,11 @@ private fun AddBusinessScreenEmptyPreview() {
             onMunicipalitySelected = {},
             onBusinessModelChanged = {},
             onMonthlyIncomeChanged = {},
-            onImageSelected = {},
-            onSubmit = {}
+            onLaunchGallery = TODO(),
+            onLaunchCamera = TODO(),
+            onClearImage = TODO(),
+            onSubmit = TODO(),
+            modifier = TODO(),
         )
     }
 }
@@ -68,8 +71,11 @@ private fun AddBusinessScreenFilledPreview() {
             onMunicipalitySelected = {},
             onBusinessModelChanged = {},
             onMonthlyIncomeChanged = {},
-            onImageSelected = {},
-            onSubmit = {}
+            onLaunchGallery = TODO(),
+            onLaunchCamera = TODO(),
+            onClearImage = TODO(),
+            onSubmit = TODO(),
+            modifier = TODO(),
         )
     }
 }
@@ -90,8 +96,11 @@ private fun AddBusinessScreenLoadingPreview() {
             onMunicipalitySelected = {},
             onBusinessModelChanged = {},
             onMonthlyIncomeChanged = {},
-            onImageSelected = {},
-            onSubmit = {}
+            onLaunchGallery = TODO(),
+            onLaunchCamera = TODO(),
+            onClearImage = TODO(),
+            onSubmit = TODO(),
+            modifier = TODO(),
         )
     }
 }
@@ -116,8 +125,11 @@ private fun AddBusinessScreenErrorPreview() {
             onMunicipalitySelected = {},
             onBusinessModelChanged = {},
             onMonthlyIncomeChanged = {},
-            onImageSelected = {},
-            onSubmit = {}
+            onLaunchGallery = TODO(),
+            onLaunchCamera = TODO(),
+            onClearImage = TODO(),
+            onSubmit = TODO(),
+            modifier = TODO(),
         )
     }
 }
@@ -127,16 +139,17 @@ private fun AddBusinessScreenErrorPreview() {
 @Composable
 private fun AddBusinessScreenSuccessPreview() {
     KoruTheme {
-        // Success state is now a separate composable shown within AddBusinessContent
-        // For preview, we can show it directly if needed, or rely on the Content preview logic
         AddBusinessContent(
-            uiState = AddBusinessUiState(isSuccess = true), // Trigger success state in content
+            uiState = AddBusinessUiState(isSuccess = true),
             onBackClick = {},
-            // Other callbacks are not relevant for success state preview
             onBusinessNameChanged = {}, onDescriptionChanged = {}, onInvestmentChanged = {},
             onProfitChanged = {}, onCategorySelected = {}, onStateSelected = {},
             onMunicipalitySelected = {}, onBusinessModelChanged = {}, onMonthlyIncomeChanged = {},
-            onImageSelected = {}, onSubmit = {}
+            onLaunchGallery = TODO(),
+            onLaunchCamera = TODO(),
+            onClearImage = TODO(),
+            onSubmit = TODO(),
+            modifier = TODO(),
         )
     }
 }

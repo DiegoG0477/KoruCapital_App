@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.composables.icons.lucide.* // Keep lucide icons if used
-import com.koru.capital.R // Assuming placeholder image
+import com.composables.icons.lucide.*
+import com.koru.capital.R
 import com.koru.capital.business.presentation.viewmodel.BusinessFilter
 import com.koru.capital.business.presentation.viewmodel.BusinessListItemUiModel
 import com.koru.capital.business.presentation.viewmodel.MyBusinessesUiState
@@ -39,33 +39,32 @@ fun MyBusinessesContent(
     uiState: MyBusinessesUiState,
     onAddBusiness: () -> Unit,
     onFilterSelected: (BusinessFilter) -> Unit,
-    onEditBusiness: (String) -> Unit, // Callback for edit action
-    onDeleteRequest: (BusinessListItemUiModel) -> Unit, // Callback to trigger delete confirmation
-    onConfirmDelete: () -> Unit, // Callback for confirming deletion
-    onDismissDelete: () -> Unit, // Callback to dismiss deletion dialog
+    onEditBusiness: (String) -> Unit,
+    onDeleteRequest: (BusinessListItemUiModel) -> Unit,
+    onConfirmDelete: () -> Unit,
+    onDismissDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        MyBusinessesTop() // Reusable Top Bar/Header
+        MyBusinessesTop()
 
-        // Filter Tabs
         FilterSelector(
             selectedFilter = uiState.selectedFilter,
             onFilterSelected = onFilterSelected
         )
 
-        Spacer(modifier = Modifier.height(8.dp)) // Reduced space after tabs
+        Spacer(modifier = Modifier.height(8.dp))
 
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.TopCenter // Align list/loading/error to top
+            contentAlignment = Alignment.TopCenter
         ) {
             when {
-                uiState.isLoading && uiState.businesses.isEmpty() -> { // Show full screen loader only if list is empty initially
+                uiState.isLoading && uiState.businesses.isEmpty() -> {
                     CircularProgressIndicator(
                         color = KoruOrange,
                         modifier = Modifier.align(Alignment.Center)
@@ -79,22 +78,20 @@ fun MyBusinessesContent(
                         modifier = Modifier.padding(32.dp).align(Alignment.Center)
                     )
                 }
-                uiState.businesses.isEmpty() -> { // Handle empty state after loading
+                uiState.businesses.isEmpty() -> {
                     EmptyBusinessState(onAddBusinessClick = onAddBusiness)
                 }
                 else -> {
-                    // Display the list of businesses
                     BusinessList(
                         businesses = uiState.businesses,
-                        isLoading = uiState.isLoading, // Pass loading state for potential item overlay
+                        isLoading = uiState.isLoading,
                         onEdit = onEditBusiness,
-                        onDelete = onDeleteRequest // Trigger delete request
+                        onDelete = onDeleteRequest
                     )
                 }
             }
         }
 
-        // Delete Confirmation Dialog (Conditionally shown)
         if (uiState.showDeleteConfirmation) {
             DeleteConfirmationDialog(
                 businessName = uiState.businessToDelete?.name ?: "este negocio",
@@ -111,7 +108,7 @@ fun MyBusinessesTop() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 25.dp)
-            .padding(top = 16.dp, bottom = 8.dp) // Adjusted padding
+            .padding(top = 16.dp, bottom = 8.dp)
     ) {
         Text(
             text = "Mis Negocios",
@@ -132,8 +129,8 @@ fun FilterSelector(
     TabRow(
         selectedTabIndex = selectedFilter.ordinal,
         modifier = modifier.fillMaxWidth(),
-        containerColor = KoruWhite, // Background color for the tab row
-        contentColor = KoruOrange, // Color for the selected tab indicator and text
+        containerColor = KoruWhite,
+        contentColor = KoruOrange,
         indicator = { tabPositions ->
             if (selectedFilter.ordinal < tabPositions.size) {
                 TabRowDefaults.Indicator(
@@ -166,9 +163,9 @@ fun FilterSelector(
 @Composable
 fun BusinessList(
     businesses: List<BusinessListItemUiModel>,
-    isLoading: Boolean, // Can be used to show loading state on items
+    isLoading: Boolean,
     onEdit: (String) -> Unit,
-    onDelete: (BusinessListItemUiModel) -> Unit, // Pass full item for context
+    onDelete: (BusinessListItemUiModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -180,19 +177,9 @@ fun BusinessList(
             BusinessListItem(
                 business = business,
                 onEdit = { onEdit(business.id) },
-                onDelete = { onDelete(business) } // Pass the business object
+                onDelete = { onDelete(business) }
             )
         }
-        // Optional: Show a loading item at the end if paginating later
-        /*
-        if (isLoading && businesses.isNotEmpty()) {
-            item {
-                Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = KoruOrange)
-                }
-            }
-        }
-        */
     }
 }
 
@@ -212,13 +199,12 @@ fun BusinessListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, top = 12.dp, bottom = 12.dp, end = 4.dp), // Reduced end padding for icons
+                .padding(start = 12.dp, top = 12.dp, bottom = 12.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Image and Text content
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(business.imageUrl ?: R.drawable.sample_business) // Use placeholder
+                    .data(business.imageUrl ?: R.drawable.sample_business)
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(R.drawable.sample_business),
@@ -254,7 +240,7 @@ fun BusinessListItem(
                         )
                     }
                     if (business.category != null && business.location != null) {
-                        Text("•", fontSize = 12.sp, color = KoruDarkGray) // Separator
+                        Text("•", fontSize = 12.sp, color = KoruDarkGray)
                     }
                     business.location?.let {
                         Text(
@@ -269,21 +255,20 @@ fun BusinessListItem(
                 }
             }
 
-            // Action Icons (Edit/Delete - only if owned)
             if (business.isOwned) {
                 Row {
                     IconButton(onClick = onEdit, modifier = Modifier.size(40.dp)) {
                         Icon(
-                            Icons.Default.Edit, // Use Material icon
+                            Icons.Default.Edit,
                             contentDescription = "Editar",
                             tint = KoruDarkGray
                         )
                     }
                     IconButton(onClick = onDelete, modifier = Modifier.size(40.dp)) {
                         Icon(
-                            Icons.Default.Delete, // Use Material icon
+                            Icons.Default.Delete,
                             contentDescription = "Eliminar",
-                            tint = KoruRed // Use red for delete
+                            tint = KoruRed
                         )
                     }
                 }
@@ -295,13 +280,12 @@ fun BusinessListItem(
 
 @Composable
 fun EmptyBusinessState(onAddBusinessClick: () -> Unit) {
-    // Keep existing EmptyBusinessState composable, ensure it uses theme colors
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 32.dp), // Add vertical padding
+            .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center // Center vertically too
+        verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
@@ -310,7 +294,7 @@ fun EmptyBusinessState(onAddBusinessClick: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                Lucide.Store, // Changed icon to represent business
+                Lucide.Store,
                 contentDescription = null,
                 modifier = Modifier.size(45.dp),
                 tint = KoruOrange
@@ -318,15 +302,15 @@ fun EmptyBusinessState(onAddBusinessClick: () -> Unit) {
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = "No hay negocios aquí", // More generic message
-            fontSize = 22.sp, // Slightly smaller
+            text = "No hay negocios aquí",
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = KoruOrange,
             fontFamily = funnelSansFamily
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Parece que aún no tienes negocios en esta sección. ¡Explora o agrega uno nuevo!", // Adjusted text
+            text = "Parece que aún no tienes negocios en esta sección. ¡Explora o agrega uno nuevo!",
             fontSize = 16.sp,
             color = KoruDarkGray,
             textAlign = TextAlign.Center,
@@ -346,7 +330,6 @@ fun EmptyBusinessState(onAddBusinessClick: () -> Unit) {
     }
 }
 
-// --- Delete Confirmation Dialog --- (Point g is partially done here)
 @Composable
 fun DeleteConfirmationDialog(
     businessName: String,
@@ -360,7 +343,7 @@ fun DeleteConfirmationDialog(
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(containerColor = KoruRed) // Destructive action color
+                colors = ButtonDefaults.buttonColors(containerColor = KoruRed)
             ) {
                 Text("Eliminar", color = KoruWhite, fontFamily = funnelSansFamily)
             }
@@ -373,6 +356,6 @@ fun DeleteConfirmationDialog(
                 Text("Cancelar", color = KoruDarkGray, fontFamily = funnelSansFamily)
             }
         },
-        containerColor = KoruWhite // Dialog background
+        containerColor = KoruWhite
     )
 }

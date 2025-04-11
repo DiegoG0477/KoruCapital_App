@@ -23,31 +23,31 @@ import com.koru.capital.core.ui.theme.KoruLightYellow
 @Composable
 fun BusinessTag(
     icon: ImageVector,
-    text: String, // Text is now mandatory for this version
+    text: String,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
             .background(
-                color = KoruLightYellow, // Use theme color
+                color = KoruLightYellow,
                 shape = RoundedCornerShape(35.dp)
             )
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp) // Reduced space
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Icon(
             icon,
-            modifier = Modifier.size(14.dp), // Slightly smaller icon
-            contentDescription = null, // Content description handled by text
-            tint = KoruDarkOrange // Use theme color
+            modifier = Modifier.size(14.dp),
+            contentDescription = null,
+            tint = KoruDarkOrange
         )
         Text(
             text = text,
-            color = KoruDarkOrange, // Use theme color
-            fontSize = 11.sp, // Slightly smaller text
+            color = KoruDarkOrange,
+            fontSize = 11.sp,
             fontFamily = funnelSansFamily,
-            maxLines = 1 // Ensure tag text doesn't wrap excessively
+            maxLines = 1
         )
     }
 }

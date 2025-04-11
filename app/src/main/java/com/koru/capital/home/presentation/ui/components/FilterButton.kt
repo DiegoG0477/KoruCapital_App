@@ -16,17 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.koru.capital.core.ui.theme.* // Import theme colors
+import com.koru.capital.core.ui.theme.*
 
 @Composable
 fun FilterButton(
     text: String,
     icon: ImageVector,
     onClick: () -> Unit,
-    isActive: Boolean, // Determines visual state
+    isActive: Boolean,
     modifier: Modifier = Modifier
 ) {
-    // Determine colors based on active state using theme colors
     val containerColor = if (isActive) KoruOrange else KoruWhite
     val contentColor = if (isActive) KoruWhite else KoruBlack
     val borderColor = if (isActive) KoruOrange else KoruDarkGray
@@ -40,7 +39,6 @@ fun FilterButton(
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(34.dp),
         modifier = modifier
-            // .height(36.dp) // Allow content height or set fixed height
             .border(
                 width = 1.dp,
                 color = borderColor,
@@ -54,15 +52,14 @@ fun FilterButton(
             Icon(
                 modifier = Modifier.size(16.dp),
                 imageVector = icon,
-                contentDescription = null, // Text provides context
-                tint = contentColor // Use dynamic content color
+                contentDescription = null,
+                tint = contentColor
             )
-            // Only show text if label is not empty (for the filter icon button)
             if (text.isNotEmpty()) {
                 Text(
                     text = text,
                     fontSize = 12.sp,
-                    color = contentColor // Use dynamic content color
+                    color = contentColor
                 )
             }
         }

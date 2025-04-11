@@ -16,34 +16,32 @@ import com.composables.icons.lucide.Grid2x2Check
 import com.composables.icons.lucide.ListFilter
 import com.composables.icons.lucide.Lucide
 
-// Enum definition remains the same
 enum class FilterType(val icon: ImageVector, val label: String) {
     NEAR_ME(Lucide.Compass, "Cerca de mí"),
     LESS_THAN_50K(Lucide.DollarSign, "0 - 50k"),
     CATEGORY(Lucide.Grid2x2Check, "Categoría"),
-    MORE_FILTERS(Lucide.ListFilter, "") // Button for more complex filters
+    MORE_FILTERS(Lucide.ListFilter, "")
 }
 
 @Composable
 fun FilterRow(
-    activeFilters: Set<FilterType>, // Current active filters from ViewModel state
-    onFilterClick: (FilterType) -> Unit, // Callback to ViewModel when a filter is clicked
+    activeFilters: Set<FilterType>,
+    onFilterClick: (FilterType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()) // Allow scrolling if filters overflow
+            .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp) // Space between buttons
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Iterate through all defined filter types
         FilterType.values().forEach { filterType ->
             FilterButton(
                 text = filterType.label,
                 icon = filterType.icon,
-                onClick = { onFilterClick(filterType) }, // Call the ViewModel callback
-                isActive = activeFilters.contains(filterType) // Check if this filter is in the active set
+                onClick = { onFilterClick(filterType) },
+                isActive = activeFilters.contains(filterType)
             )
         }
     }

@@ -7,37 +7,31 @@ import java.text.NumberFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-// --- DTO to Domain ---
 fun BusinessFeedItemDto.toDomain(): BusinessFeedItem {
-    // Use helper for investment range formatting
     val investmentRangeFormatted = formatInvestmentRange(investmentMin, investmentMax)
 
     return BusinessFeedItem(
         id = this.id,
         imageUrl = this.imageUrl,
-        title = this.title ?: "Oportunidad sin título", // Provide default
+        title = this.title ?: "Oportunidad sin título",
         category = this.categoryName,
         location = this.locationName,
-        investmentRange = investmentRangeFormatted, // Use formatted string
+        investmentRange = investmentRangeFormatted,
         partnerCount = this.partnerCount,
-        description = this.description ?: "", // Provide default
-        businessModel = this.businessModel ?: "", // Provide default
+        description = this.description ?: "",
+        businessModel = this.businessModel ?: "",
         ownerName = this.owner?.name,
         ownerImageUrl = this.owner?.profileImageUrl,
         savedCount = this.savedCount,
-        // Crucially rely on the API flag if provided, otherwise default to false
         isSaved = this.isSavedByUser ?: false,
         isLiked = this.isLikedByUser ?: false
     )
 }
 
-/**
- * Helper to format investment min/max from DTO into a display string for the domain.
- * Example formats: "<50k", "50k-100k", ">100k", "N/A"
- */
+
 private fun formatInvestmentRange(min: Double?, max: Double?): String? {
     val formatter = NumberFormat.getNumberInstance(Locale("es", "MX")).apply {
-        maximumFractionDigits = 0 // No decimals for 'k' representation
+        maximumFractionDigits = 0
     }
 
     val minK = min?.takeIf { it > 0 }?.div(1000)?.roundToInt()
@@ -47,13 +41,11 @@ private fun formatInvestmentRange(min: Double?, max: Double?): String? {
         minK != null && maxK != null -> "${formatter.format(minK)}k - ${formatter.format(maxK)}k"
         maxK != null -> "< ${formatter.format(maxK)}k"
         minK != null -> "> ${formatter.format(minK)}k"
-        else -> null // Or return "N/A" or some default?
+        else -> null
     }
 }
 
 
-// --- Domain to Presentation (UI Model) ---
-// This mapping is often simple, transferring data as is, but can add UI-specific formatting if needed.
 fun BusinessFeedItem.toUiModel(): BusinessCardUiModel {
     return BusinessCardUiModel(
         id = this.id,
@@ -68,7 +60,7 @@ fun BusinessFeedItem.toUiModel(): BusinessCardUiModel {
         ownerName = this.ownerName,
         ownerImageUrl = this.ownerImageUrl,
         savedCount = this.savedCount,
-        isSaved = this.isSaved, // Pass state through
-        isLiked = this.isLiked  // Pass state through
+        isSaved = this.isSaved,
+        isLiked = this.isLiked
     )
 }

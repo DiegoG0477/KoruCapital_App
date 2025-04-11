@@ -8,12 +8,6 @@ interface AuthRepository {
     suspend fun login(credentials: LoginCredentials): Result<AuthToken>
     suspend fun register(registrationData: RegistrationData): Result<AuthToken>
 
-    /**
-     * Clears the stored authentication token.
-     * @return Result indicating success or failure.
-     */
-    suspend fun logout(): Result<Unit> // <-- AÑADIR ESTO
+    suspend fun logout(): Result<Unit>
 
-    // suspend fun refreshToken(): Result<AuthToken>
-    // suspend fun isLoggedIn(): Boolean // Podríamos añadir esto para el chequeo de sesión
 }

@@ -31,7 +31,7 @@ private fun EditProfileContentLoadedPreview() {
                 bio = "Desarrollador y entusiasta de las finanzas.",
                 linkedInUrl = "https://linkedin.com/in/carlos",
                 instagramUrl = "https://instagram.com/carlos_ru",
-                currentProfileImageUrl = null // Uses placeholder
+                currentProfileImageUrl = null
             ),
             onBackClick = {}, onFirstNameChange = {}, onLastNameChange = {}, onBioChange = {},
             onLinkedInChange = {}, onInstagramChange = {}, onImageSelected = {}, onSaveChanges = {},
@@ -48,8 +48,8 @@ private fun EditProfileContentSavingPreview() {
         EditProfileContent(
             uiState = EditProfileUiState(
                 isLoading = false,
-                isSaving = true, // Show saving indicator
-                firstName = "Carlos", lastName = "Ruiz" // Other fields...
+                isSaving = true,
+                firstName = "Carlos", lastName = "Ruiz"
             ),
             onBackClick = {}, onFirstNameChange = {}, onLastNameChange = {}, onBioChange = {},
             onLinkedInChange = {}, onInstagramChange = {}, onImageSelected = {}, onSaveChanges = {},
@@ -67,7 +67,7 @@ private fun EditProfileContentErrorPreview() {
             uiState = EditProfileUiState(
                 isLoading = false,
                 errorMessage = "El nombre no puede estar vacío.",
-                firstName = "", // Example error state
+                firstName = "",
                 lastName = "Ruiz"
             ),
             onBackClick = {}, onFirstNameChange = {}, onLastNameChange = {}, onBioChange = {},

@@ -1,21 +1,20 @@
 package com.koru.capital.business.data.dto
 
-// Example DTO - Adapt based on actual API response for business details
 data class BusinessDto(
-    val id: String, // Assuming API returns ID in details
+    val id: String,
     val name: String,
     val description: String,
     val investment: Double,
     val profitPercentage: Double,
-    val categoryId: Int, // Assuming IDs are returned
-    val categoryName: String?, // Optional name if API provides it
-    val municipalityId: Int,
+    val categoryId: Int,
+    val categoryName: String?,
+    val municipalityId: String,
     val municipalityName: String?,
-    val stateName: String?, // May need state info too
+    val stateName: String?,
     val businessModel: String,
     val monthlyIncome: Double,
-    val imageUrls: List<String>?, // Allow multiple images?
-    val ownerInfo: OwnerContactDto? // Nested owner contact details
+    val imageUrls: List<String>?,
+    val ownerInfo: OwnerContactDto?
 )
 
 data class OwnerContactDto(

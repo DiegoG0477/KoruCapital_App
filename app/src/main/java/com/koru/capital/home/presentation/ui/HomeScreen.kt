@@ -9,7 +9,6 @@ import com.koru.capital.home.presentation.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    // Lambdas de navegación recibidas desde NavigationWrapper
     onNavigateToDetails: (String) -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
@@ -17,18 +16,15 @@ fun HomeScreen(
 
     HomeContent(
         uiState = uiState,
-        // Usa la nueva función centralizada para manejar clics en filtros
         onFilterClick = viewModel::handleFilterClick,
         onSaveClick = viewModel::toggleSaveBusiness,
         onLikeClick = viewModel::toggleLikeBusiness,
         onCardClick = { businessId ->
-            // Llama a la lambda de navegación real
             onNavigateToDetails(businessId)
         },
         onSettingsClick = {
-            // Llama a la lambda de navegación real
             onNavigateToSettings()
         },
-        onLoadMore = viewModel::loadMoreBusinesses // Conectar la carga de más elementos
+        onLoadMore = viewModel::loadMoreBusinesses
     )
 }

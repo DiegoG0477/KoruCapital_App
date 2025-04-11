@@ -13,18 +13,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composables.icons.lucide.CalendarDays // More specific icon
+import com.composables.icons.lucide.CalendarDays
 import com.composables.icons.lucide.Lucide
 import com.koru.capital.core.ui.funnelSansFamily
 import com.koru.capital.core.ui.theme.*
 
 @Composable
 fun DatePickerField(
-    value: String, // Display formatted date string
+    value: String,
     label: String,
-    onFieldClick: () -> Unit, // Trigger ViewModel action to show picker
+    onFieldClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isError: Boolean = false, // Optional error state
+    isError: Boolean = false,
     errorMessage: String? = null
 ) {
 
@@ -36,29 +36,28 @@ fun DatePickerField(
             modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
         )
 
-        // Use Box with clickable to overlay the TextField
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onFieldClick) // Click triggers VM action
+                .clickable(onClick = onFieldClick)
         ) {
             OutlinedTextField(
                 value = value,
-                onValueChange = {}, // No direct changes here
+                onValueChange = {},
                 modifier = Modifier
                     .fillMaxWidth(),
-                enabled = false, // Visually disabled, but Box handles click
+                enabled = false,
                 readOnly = true,
-                placeholder = { Text("DD/MM/AAAA") }, // Added placeholder
+                placeholder = { Text("DD/MM/AAAA") },
                 isError = isError,
                 shape = RoundedCornerShape(8.dp),
-                colors = TextFieldDefaults.colors( // Consistent styling
+                colors = TextFieldDefaults.colors(
                     disabledContainerColor = KoruInputBackground,
-                    disabledTextColor = if (value.isEmpty()) KoruDarkGray else KoruBlack, // Show placeholder color if empty
+                    disabledTextColor = if (value.isEmpty()) KoruDarkGray else KoruBlack,
                     disabledIndicatorColor = if(isError) KoruRed else KoruTransparent,
                     disabledLeadingIconColor = KoruDarkGray,
                     disabledTrailingIconColor = KoruDarkGray,
-                    errorIndicatorColor = KoruRed // Ensure error border shows
+                    errorIndicatorColor = KoruRed
                 ),
                 trailingIcon = {
                     Icon(

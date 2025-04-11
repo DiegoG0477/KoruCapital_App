@@ -26,10 +26,10 @@ import com.koru.capital.core.ui.theme.*
 @Composable
 fun RegisterPersonalInfoContent(
     uiState: RegisterUiState,
-    formattedBirthDate: String, // Pass formatted date
+    formattedBirthDate: String,
     onFirstNameChanged: (String) -> Unit,
     onLastNameChanged: (String) -> Unit,
-    onBirthDateClick: () -> Unit, // Trigger date picker
+    onBirthDateClick: () -> Unit,
     onCountrySelected: (Country?) -> Unit,
     onStateSelected: (State?) -> Unit,
     onMunicipalitySelected: (Municipality?) -> Unit,
@@ -43,7 +43,7 @@ fun RegisterPersonalInfoContent(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(32.dp)) // Top spacing
+        Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = "Información Personal",
             fontFamily = funnelSansFamily,
@@ -51,10 +51,9 @@ fun RegisterPersonalInfoContent(
             fontWeight = FontWeight.Bold,
             color = KoruBlack,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 24.dp) // Increased bottom padding
+            modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // --- Form Fields ---
         LabeledTextField(
             value = uiState.firstName,
             onValueChange = onFirstNameChanged,
@@ -74,11 +73,11 @@ fun RegisterPersonalInfoContent(
         )
 
         DatePickerField(
-            value = formattedBirthDate, // Display formatted date
+            value = formattedBirthDate,
             label = "Fecha de Nacimiento",
-            onFieldClick = onBirthDateClick, // Trigger VM action
-            modifier = Modifier.fillMaxWidth(), // Removed padding here, handled by component
-            isError = uiState.registrationError != null && uiState.birthDate == null // Example error check
+            onFieldClick = onBirthDateClick,
+            modifier = Modifier.fillMaxWidth(),
+            isError = uiState.registrationError != null && uiState.birthDate == null
         )
 
         DropdownField(
@@ -86,9 +85,9 @@ fun RegisterPersonalInfoContent(
             options = uiState.countries,
             selectedOption = uiState.selectedCountry,
             onOptionSelected = onCountrySelected,
-            optionToString = { it.name }, // How to display Country name
+            optionToString = { it.name },
             modifier = Modifier.fillMaxWidth(),
-            enabled = uiState.countries.isNotEmpty() && !uiState.isLoading, // Disable while loading countries
+            enabled = uiState.countries.isNotEmpty() && !uiState.isLoading,
             placeholder = if (uiState.isLoading && uiState.countries.isEmpty()) "Cargando..." else "Selecciona país",
             isError = uiState.registrationError != null && uiState.selectedCountry == null
         )
@@ -125,7 +124,6 @@ fun RegisterPersonalInfoContent(
             isError = uiState.registrationError != null && uiState.selectedMunicipality == null
         )
 
-        // --- General Error Message ---
         if (uiState.registrationError != null && uiState.currentStep == RegisterStep.PERSONAL_INFO) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -140,19 +138,18 @@ fun RegisterPersonalInfoContent(
         }
 
 
-        // --- Submit Button ---
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = onSubmitClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp), // Consistent height
+                .height(56.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = KoruOrangeAlternative, // Use theme color
+                containerColor = KoruOrangeAlternative,
                 contentColor = KoruWhite
             ),
-            shape = RoundedCornerShape(12.dp), // Consistent shape
-            enabled = !uiState.isLoading // Disable when loading
+            shape = RoundedCornerShape(12.dp),
+            enabled = !uiState.isLoading
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator(
@@ -169,6 +166,6 @@ fun RegisterPersonalInfoContent(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(16.dp)) // Bottom padding
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

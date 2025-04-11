@@ -9,7 +9,7 @@ import com.koru.capital.profile.presentation.viewmodel.MyAccountViewModel
 @Composable
 fun MyAccountScreen(
     viewModel: MyAccountViewModel = hiltViewModel(),
-    onNavigateToEditProfile: () -> Unit, // Receive navigation lambda
+    onNavigateToEditProfile: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onLogout: () -> Unit
 ) {
@@ -17,11 +17,11 @@ fun MyAccountScreen(
 
     MyAccountContent(
         uiState = uiState,
-        onEditProfileClick = onNavigateToEditProfile, // Use the lambda
-        onSettingsClick = onNavigateToSettings,     // Use the lambda
+        onEditProfileClick = onNavigateToEditProfile,
+        onSettingsClick = onNavigateToSettings,
         onLogoutClick = {
-            viewModel.onLogoutClick() // Handle VM logic first
-            onLogout() // Then navigate
+            viewModel.onLogoutClick()
+            onLogout()
         }
     )
 }

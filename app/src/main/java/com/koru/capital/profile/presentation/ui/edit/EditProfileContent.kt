@@ -17,7 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color // Import Color if needed explicitly
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,8 +47,8 @@ fun EditProfileContent(
     onBioChange: (String) -> Unit,
     onLinkedInChange: (String) -> Unit,
     onInstagramChange: (String) -> Unit,
-    onImagePickerClick: () -> Unit, // Lambda to launch the picker
-    onImageSelected: (Uri?) -> Unit, // Actual selection handler (might be redundant now)
+    onImagePickerClick: () -> Unit,
+    onImageSelected: (Uri?) -> Unit,
     onSaveChanges: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -82,7 +82,6 @@ fun EditProfileContent(
                     CircularProgressIndicator(color = KoruOrange)
                 }
             } else {
-                // --- Profile Image ---
                 Box(contentAlignment = Alignment.Center) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -98,33 +97,25 @@ fun EditProfileContent(
                             .size(120.dp)
                             .clip(CircleShape)
                             .border(2.dp, KoruOrange, CircleShape)
-                            .clickable(onClick = onImagePickerClick) // Make image clickable to change
+                            .clickable(onClick = onImagePickerClick)
                     )
-                    // Overlay icon suggesting editability
                     Box(
                         modifier = Modifier
-                            .size(120.dp) // Match image size
-                            .background(Color.Black.copy(alpha = 0.3f), CircleShape) // Semi-transparent overlay
-                            .clickable(onClick = onImagePickerClick), // Also clickable
+                            .size(120.dp)
+                            .background(Color.Black.copy(alpha = 0.3f), CircleShape)
+                            .clickable(onClick = onImagePickerClick),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             Lucide.Camera,
                             contentDescription = "Cambiar foto",
-                            tint = KoruWhite.copy(alpha = 0.8f), // Make icon slightly transparent
+                            tint = KoruWhite.copy(alpha = 0.8f),
                             modifier = Modifier.size(32.dp)
                         )
                     }
-                    /* Alternative: Button below image
-                     Button(onClick = onImagePickerClick, modifier = Modifier.align(Alignment.BottomCenter).offset(y = 20.dp)) {
-                         Icon(Lucide.Camera, ...)
-                         Text("Cambiar foto")
-                     }
-                     */
                 }
                 Spacer(Modifier.height(24.dp))
 
-                // --- Text Fields ---
                 LabeledTextField(
                     value = uiState.firstName,
                     onValueChange = onFirstNameChange,
@@ -182,7 +173,6 @@ fun EditProfileContent(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                // --- Error Message ---
                 if (uiState.errorMessage != null) {
                     Text(
                         text = uiState.errorMessage,
@@ -194,7 +184,6 @@ fun EditProfileContent(
 
                 Spacer(Modifier.height(24.dp))
 
-                // --- Save Button ---
                 Button(
                     onClick = onSaveChanges,
                     modifier = Modifier.fillMaxWidth().height(56.dp),

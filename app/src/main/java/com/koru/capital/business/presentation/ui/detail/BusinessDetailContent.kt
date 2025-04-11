@@ -6,7 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack // Use auto-mirrored icon
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,11 +24,11 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.composables.icons.lucide.*
-import com.koru.capital.R // Placeholder image resource
-import com.koru.capital.business.domain.model.Business // Import domain model
+import com.koru.capital.R
+import com.koru.capital.business.domain.model.Business
 import com.koru.capital.business.presentation.viewmodel.BusinessDetailUiState
 import com.koru.capital.core.ui.funnelSansFamily
-import com.koru.capital.core.ui.theme.* // Import theme colors
+import com.koru.capital.core.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,15 +37,14 @@ fun BusinessDetailContent(
     onBackClick: () -> Unit,
     onAssociateClick: () -> Unit,
     onDismissAssociationDialog: () -> Unit,
-    // Add callbacks for like/save if needed
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar( // Use CenterAligned for title in middle
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = uiState.business?.name ?: "Detalles", // Show name when loaded
+                        text = uiState.business?.name ?: "Detalles",
                         fontFamily = funnelSansFamily,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -55,21 +54,18 @@ fun BusinessDetailContent(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack, // Back arrow
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Regresar"
                         )
                     }
                 },
-                // Optional Actions (like Save/Share)
                 actions = {
-                    // IconButton(onClick = { /* onSaveToggle */ }) { Icon(Lucide.Bookmark, "Guardar") }
-                    // IconButton(onClick = { /* onShare */ }) { Icon(Lucide.Share2, "Compartir") }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = KoruWhite, // Or transparent/themed
+                    containerColor = KoruWhite,
                     titleContentColor = KoruOrange,
-                    navigationIconContentColor = KoruBlack, // Or KoruOrange
-                    actionIconContentColor = KoruBlack // Or KoruOrange
+                    navigationIconContentColor = KoruBlack,
+                    actionIconContentColor = KoruBlack
                 )
             )
         }
@@ -95,13 +91,12 @@ fun BusinessDetailContent(
                     )
                 }
                 uiState.business != null -> {
-                    // Display Business Details
                     BusinessDetails(
                         business = uiState.business,
                         onAssociateClick = onAssociateClick
                     )
                 }
-                else -> { // Should not happen if loading/error/success are handled
+                else -> {
                     Text(
                         text = "No se encontraron datos del negocio.",
                         modifier = Modifier.padding(32.dp).align(Alignment.Center)
@@ -109,11 +104,9 @@ fun BusinessDetailContent(
                 }
             }
 
-            // Show Association Dialog conditionally
             if (uiState.showAssociationDialog && uiState.business != null) {
                 AssociationSuccessDialog(
                     businessName = uiState.business.name,
-                    // Pass contact info from domain model (needs adding)
                     ownerName = uiState.business.ownerName ?: "Propietario",
                     ownerEmail = uiState.business.ownerEmail ?: "No disponible",
                     ownerPhone = uiState.business.ownerPhone ?: "No disponible",
@@ -124,7 +117,6 @@ fun BusinessDetailContent(
     }
 }
 
-// Composable to display the actual business details
 @Composable
 fun BusinessDetails(
     business: Business,
@@ -135,12 +127,11 @@ fun BusinessDetails(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(bottom = 80.dp) // Ensure space for the floating button
+            .padding(bottom = 80.dp)
     ) {
-        // --- Image Header --- (Could be a carousel later)
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(business.imageUrl ?: R.drawable.sample_business) // Use actual or placeholder
+                .data(business.imageUrl ?: R.drawable.sample_business)
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(R.drawable.sample_business),
@@ -149,35 +140,30 @@ fun BusinessDetails(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp) // Larger image for detail view
+                .height(250.dp)
         )
 
-        // --- Main Content Padding ---
         Column(Modifier.padding(16.dp)) {
-            // --- Title ---
             Text(
                 text = business.name,
-                style = MaterialTheme.typography.headlineSmall, // Larger title
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 fontFamily = funnelSansFamily,
                 color = KoruOrange
             )
             Spacer(Modifier.height(12.dp))
 
-            // --- Tags/Info Row ---
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Reuse BusinessTag or create specific DetailTag
                 business.categoryName?.let { DetailTag(icon = Lucide.Tag, text = it) }
                 business.locationName?.let { DetailTag(icon = Lucide.MapPin, text = it) }
                 business.investmentRange?.let { DetailTag(icon = Lucide.BadgeDollarSign, text = it) }
             }
             Spacer(Modifier.height(16.dp))
 
-            // --- Description Section ---
             DetailSection(title = "Descripción", icon = Lucide.FileText) {
                 Text(
                     text = business.description,
@@ -188,15 +174,13 @@ fun BusinessDetails(
             }
             Spacer(Modifier.height(16.dp))
 
-            // --- Investment/Profit/Income --- (Could be in a grid or row)
             DetailSection(title = "Finanzas", icon = Lucide.TrendingUp) {
                 FinancialDetailItem("Inversión Requerida:", "MXN ${"%,.0f".format(business.investment)}")
-                FinancialDetailItem("Ganancia Estimada:", "${business.profitPercentage.toInt()}%") // Format as needed
+                FinancialDetailItem("Ganancia Estimada:", "${business.profitPercentage.toInt()}%")
                 FinancialDetailItem("Ingresos Mensuales Est.:", "MXN ${"%,.0f".format(business.monthlyIncome)}")
             }
             Spacer(Modifier.height(16.dp))
 
-            // --- Business Model ---
             DetailSection(title = "Modelo de Negocio", icon = Lucide.Star) {
                 Text(
                     text = business.businessModel,
@@ -207,24 +191,10 @@ fun BusinessDetails(
             }
             Spacer(Modifier.height(16.dp))
 
-            // --- Owner Info Section (Optional) ---
-            /*
-            business.ownerName?.let { ownerName ->
-               DetailSection(title = "Propietario", icon = Lucide.User) {
-                   Row(verticalAlignment = Alignment.CenterVertically) {
-                      AsyncImage(...) // Owner profile pic
-                      Spacer(Modifier.width(8.dp))
-                      Text(ownerName, ...)
-                   }
-               }
-                Spacer(Modifier.height(16.dp))
-            }
-            */
 
-        } // End Padding Column
-    } // End Main Scrollable Column
+        }
+    }
 
-    // --- Floating Action Button (FAB) - Alternative to button at bottom ---
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         ExtendedFloatingActionButton(
             text = { Text("Asociarme", fontFamily = funnelSansFamily, fontWeight = FontWeight.Bold) },
@@ -237,7 +207,6 @@ fun BusinessDetails(
     }
 }
 
-// Helper for sections
 @Composable
 fun DetailSection(title: String, icon: ImageVector? = null, content: @Composable ColumnScope.() -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -248,7 +217,7 @@ fun DetailSection(title: String, icon: ImageVector? = null, content: @Composable
             }
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium, // Section title style
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 fontFamily = funnelSansFamily,
                 color = KoruBlack
@@ -260,7 +229,6 @@ fun DetailSection(title: String, icon: ImageVector? = null, content: @Composable
     }
 }
 
-// Helper for tags in detail view
 @Composable
 fun DetailTag(icon: ImageVector, text: String) {
     Row(
@@ -275,7 +243,6 @@ fun DetailTag(icon: ImageVector, text: String) {
     }
 }
 
-// Helper for financial details
 @Composable
 fun FinancialDetailItem(label: String, value: String) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -286,7 +253,6 @@ fun FinancialDetailItem(label: String, value: String) {
 }
 
 
-// --- Association Success Dialog ---
 @Composable
 fun AssociationSuccessDialog(
     businessName: String,

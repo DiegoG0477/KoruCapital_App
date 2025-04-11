@@ -1,17 +1,12 @@
-// capital/core/data/repository/LocationRepositoryImpl.kt
 package com.koru.capital.core.data.repository
 
 import com.koru.capital.core.data.mapper.toDomain
-// Import the generic wrapper
 import com.koru.capital.core.data.dto.ApiResponseDto
-// Domain Models
 import com.koru.capital.core.domain.model.Category
 import com.koru.capital.core.domain.model.Country
 import com.koru.capital.core.domain.model.Municipality
 import com.koru.capital.core.domain.model.State
-// Domain Repository Interface
 import com.koru.capital.core.domain.repository.LocationRepository
-// API Service
 import com.koru.capital.core.data.remote.LocationApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,11 +18,9 @@ class LocationRepositoryImpl @Inject constructor(
 
     override suspend fun getCountries(): Result<List<Country>> = withContext(Dispatchers.IO) {
         try {
-            // Now returns Response<ApiResponseDto<List<CountryDto>>>
             val response = apiService.getCountries()
-            // Check HTTP success AND status field AND data field
             if (response.isSuccessful && response.body()?.status == "success" && response.body()?.data != null) {
-                val dtoList = response.body()!!.data!! // data is List<CountryDto>
+                val dtoList = response.body()!!.data!!
                 Result.success(dtoList.map { it.toDomain() })
             } else {
                 val errorMsg = response.body()?.message
@@ -42,10 +35,9 @@ class LocationRepositoryImpl @Inject constructor(
 
     override suspend fun getStatesByCountry(countryId: String): Result<List<State>> = withContext(Dispatchers.IO) {
         try {
-            // Now returns Response<ApiResponseDto<List<StateDto>>>
             val response = apiService.getStatesByCountry(countryId)
             if (response.isSuccessful && response.body()?.status == "success" && response.body()?.data != null) {
-                val dtoList = response.body()!!.data!! // data is List<StateDto>
+                val dtoList = response.body()!!.data!!
                 Result.success(dtoList.map { it.toDomain() })
             } else {
                 val errorMsg = response.body()?.message
@@ -60,10 +52,9 @@ class LocationRepositoryImpl @Inject constructor(
 
     override suspend fun getMunicipalitiesByState(stateId: String): Result<List<Municipality>> = withContext(Dispatchers.IO) {
         try {
-            // Now returns Response<ApiResponseDto<List<MunicipalityDto>>>
             val response = apiService.getMunicipalitiesByState(stateId)
             if (response.isSuccessful && response.body()?.status == "success" && response.body()?.data != null) {
-                val dtoList = response.body()!!.data!! // data is List<MunicipalityDto>
+                val dtoList = response.body()!!.data!!
                 Result.success(dtoList.map { it.toDomain() })
             } else {
                 val errorMsg = response.body()?.message
@@ -78,10 +69,9 @@ class LocationRepositoryImpl @Inject constructor(
 
     override suspend fun getCategories(): Result<List<Category>> = withContext(Dispatchers.IO) {
         try {
-            // Now returns Response<ApiResponseDto<List<CategoryDto>>>
             val response = apiService.getCategories()
             if (response.isSuccessful && response.body()?.status == "success" && response.body()?.data != null) {
-                val dtoList = response.body()!!.data!! // data is List<CategoryDto>
+                val dtoList = response.body()!!.data!!
                 Result.success(dtoList.map { it.toDomain() })
             } else {
                 val errorMsg = response.body()?.message

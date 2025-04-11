@@ -10,7 +10,6 @@ import com.koru.capital.auth.domain.model.LoginCredentials
 import com.koru.capital.auth.domain.model.RegistrationData
 import java.time.format.DateTimeFormatter
 
-// --- Domain to DTO ---
 fun LoginCredentials.toRequestDto(): LoginRequestDto {
     return LoginRequestDto(
         email = this.email,
@@ -18,9 +17,7 @@ fun LoginCredentials.toRequestDto(): LoginRequestDto {
     )
 }
 
-// --- DTO to Domain ---
 fun LoginResponseDto.toDomain(): AuthToken? {
-    // Return null or throw exception if essential token data is missing
     return this.accessToken?.let { token ->
         AuthToken(
             accessToken = token,
@@ -32,12 +29,11 @@ fun LoginResponseDto.toDomain(): AuthToken? {
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun RegistrationData.toRequestDto(): RegisterRequestDto {
-    // Format date as required by the API (e.g., ISO standard)
-    val birthDateString = this.birthDate.format(DateTimeFormatter.ISO_LOCAL_DATE) // "YYYY-MM-DD"
+    val birthDateString = this.birthDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
     return RegisterRequestDto(
         email = this.email,
-        password = this.password, // Send plain password
+        password = this.password,
         firstName = this.firstName,
         lastName = this.lastName,
         birthDate = birthDateString,

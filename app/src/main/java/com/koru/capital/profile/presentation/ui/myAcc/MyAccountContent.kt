@@ -8,7 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp // For Logout
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -27,11 +27,11 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.request.transformations
-import com.composables.icons.lucide.Instagram // Use specific icons if available
+import com.composables.icons.lucide.Instagram
 import com.composables.icons.lucide.Linkedin
-import com.composables.icons.lucide.Lucide // Or general Lucide
+import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Mail
-import com.koru.capital.R // Placeholder image resource
+import com.koru.capital.R
 import com.koru.capital.core.ui.funnelSansFamily
 import com.koru.capital.profile.domain.model.UserProfile
 import com.koru.capital.profile.presentation.viewmodel.MyAccountUiState
@@ -51,7 +51,6 @@ fun MyAccountContent(
             CenterAlignedTopAppBar(
                 title = { Text("Mi Perfil", fontFamily = funnelSansFamily, fontWeight = FontWeight.Bold) },
                 actions = {
-                    // IconButton(onClick = onSettingsClick) { Icon(Icons.Default.Settings, "Ajustes") }
                     IconButton(onClick = onLogoutClick) { Icon(Icons.AutoMirrored.Filled.ExitToApp, "Cerrar Sesión") }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -66,7 +65,7 @@ fun MyAccountContent(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(KoruGrayBackground) // Light background for profile
+                .background(KoruGrayBackground)
         ) {
             when {
                 uiState.isLoading -> {
@@ -118,10 +117,9 @@ fun UserProfileDetails(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Profile Picture ---
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(profile.profileImageUrl ?: R.drawable.sample_profile) // Placeholder
+                .data(profile.profileImageUrl ?: R.drawable.sample_profile)
                 .crossfade(true)
                 .transformations(coil3.transform.CircleCropTransformation())
                 .build(),
@@ -132,11 +130,10 @@ fun UserProfileDetails(
             modifier = Modifier
                 .size(120.dp)
                 .clip(CircleShape)
-                .border(2.dp, KoruOrange, CircleShape) // Add a border
+                .border(2.dp, KoruOrange, CircleShape)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Name ---
         Text(
             text = "${profile.firstName} ${profile.lastName}",
             style = MaterialTheme.typography.headlineMedium,
@@ -146,7 +143,6 @@ fun UserProfileDetails(
         )
         Spacer(modifier = Modifier.height(4.dp))
 
-        // --- Join Date --- (Optional)
         profile.joinDate?.let {
             Text(
                 text = "Miembro desde $it",
@@ -158,7 +154,6 @@ fun UserProfileDetails(
         }
 
 
-        // --- Bio --- (Optional)
         profile.bio?.let { bio ->
             if (bio.isNotBlank()) {
                 Text(
@@ -173,7 +168,6 @@ fun UserProfileDetails(
             }
         }
 
-        // --- Social Links ---
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -189,33 +183,27 @@ fun UserProfileDetails(
             }
             profile.instagramUrl?.let { url ->
                 SocialLinkButton(
-                    icon = Lucide.Instagram, // Use specific icon
+                    icon = Lucide.Instagram,
                     url = url,
                     contentDescription = "Instagram"
                 )
             }
-            // Add more social links if needed
         }
         if(profile.linkedInUrl != null || profile.instagramUrl != null) {
             Spacer(modifier = Modifier.height(24.dp))
         }
 
 
-        // --- Contact Info --- (May be hidden or shown based on privacy)
-        // You might want to put this in a Card for visual grouping
         Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = KoruWhite)){
             Column(Modifier.padding(16.dp)) {
                 Text("Información de Contacto", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, fontFamily = funnelSansFamily)
                 Spacer(Modifier.height(8.dp))
                 ProfileInfoRow(icon = Lucide.Mail, text = profile.email)
-                // Add Phone if available and privacy allows
-                // ProfileInfoRow(icon = Lucide.Phone, text = profile.phone ?: "No disponible")
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
 
 
-        // --- Edit Button ---
         Button(
             onClick = onEditClick,
             shape = RoundedCornerShape(35.dp),
@@ -227,7 +215,7 @@ fun UserProfileDetails(
             Text("Editar Perfil", color = KoruWhite, fontFamily = funnelSansFamily)
         }
 
-        Spacer(modifier = Modifier.height(32.dp)) // Bottom padding
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 

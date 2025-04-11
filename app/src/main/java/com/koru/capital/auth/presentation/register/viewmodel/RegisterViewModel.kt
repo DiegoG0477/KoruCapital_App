@@ -26,7 +26,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-// --- Data Class (sin cambios respecto a la versión anterior) ---
 data class RegisterUiState(
     val email: String = "",
     val isEmailValid: Boolean = true,
@@ -58,7 +57,6 @@ data class RegisterUiState(
     val isRegistrationComplete: Boolean = false
 )
 
-// --- Enum y Sealed Class (sin cambios) ---
 enum class RegisterStep { EMAIL_PASSWORD, PERSONAL_INFO }
 sealed class RegisterNavigationEvent { object NavigateToPersonalInfo : RegisterNavigationEvent(); object NavigateToLogin : RegisterNavigationEvent() }
 
@@ -85,7 +83,6 @@ class RegisterViewModel @Inject constructor(
         loadCountries()
     }
 
-    // --- Data Loading (sin cambios) ---
     private fun loadCountries() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingCountries = true, registrationError = null) }
@@ -130,7 +127,6 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    // --- Event Handlers (Implementados y correctos) ---
     fun onEmailChanged(email: String) {
         _uiState.update { it.copy(email = email, isEmailValid = true, emailErrorMessage = null, registrationError = null) }
     }
@@ -237,7 +233,6 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(selectedMunicipality = municipality, registrationError = null) }
     }
 
-    // --- Submit Registration (MODIFICADO) ---
     @RequiresApi(Build.VERSION_CODES.O)
     fun submitRegistration() {
         if (!validatePersonalInfo()) {
@@ -262,37 +257,27 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             registerUserUseCase(registrationData).fold(
                 onSuccess = { authToken ->
-                    // Éxito completo (token recibido y guardado)
                     _uiState.update { it.copy(isLoading = false, isRegistrationComplete = true) }
-                    _navigationEvent.emit(RegisterNavigationEvent.NavigateToLogin) // Navegar a Login
+                    _navigationEvent.emit(RegisterNavigationEvent.NavigateToLogin)
                 },
                 onFailure = { exception ->
-                    // *** INICIO DEL CAMBIO ***
-                    // Verificar si el error es el específico de "token no procesado"
                     if (exception.message == "Registration succeeded but failed to process token data.") {
-                        // Registro OK en backend, pero auto-login falló. Navegar a Login de todas formas.
                         println("WARN: Registration successful, but auto-login token failed. Navigating to login.")
-                        // Asegurarse de parar la carga y NO marcar como completo. Limpiar error.
                         _uiState.update { it.copy(isLoading = false, isRegistrationComplete = false, registrationError = null) }
-                        // Emitir evento para navegar a Login
                         _navigationEvent.emit(RegisterNavigationEvent.NavigateToLogin)
                     } else {
-                        // Otro tipo de error durante el registro (duplicado, DB, red, etc.)
                         _uiState.update {
                             it.copy(
-                                isLoading = false, // Parar carga
-                                // Mostrar el mensaje de error real
+                                isLoading = false,
                                 registrationError = "Error en el registro: ${exception.message}"
                             )
                         }
                     }
-                    // *** FIN DEL CAMBIO ***
                 }
             )
         }
     }
 
-    // --- Validation (sin cambios) ---
     private fun validatePersonalInfo(): Boolean {
         val state = _uiState.value
         return state.firstName.isNotBlank() &&
@@ -303,7 +288,6 @@ class RegisterViewModel @Inject constructor(
                 state.selectedMunicipality != null
     }
 
-    // --- Formatting Helper (sin cambios) ---
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDate(date: LocalDate?): String {
         return date?.format(birthDateFormatter) ?: ""

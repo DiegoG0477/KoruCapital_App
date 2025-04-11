@@ -1,13 +1,9 @@
-// capital/business/data/repository/BusinessRepositoryImpl.kt
 package com.koru.capital.business.data.repository
 
-// Import generic wrapper
 import com.koru.capital.core.data.dto.ApiResponseDto
-// API Service and DTOs
 import com.koru.capital.business.data.datasource.BusinessApiService
 import com.koru.capital.business.data.dto.BusinessDto
 import com.koru.capital.business.data.dto.BusinessListItemDto
-// Mappers and Domain/UI Models
 import com.koru.capital.business.data.mapper.toDomain
 import com.koru.capital.business.data.mapper.toUiModel
 import com.koru.capital.business.domain.model.Business
@@ -25,10 +21,9 @@ class BusinessRepositoryImpl @Inject constructor(
     private val apiService: BusinessApiService
 ) : BusinessRepository {
 
-    // Helper for add/update/get details which return BusinessDto
     private suspend fun handleBusinessDtoResponse(
         apiCall: suspend () -> Response<ApiResponseDto<BusinessDto>>,
-        actionName: String // For error messages
+        actionName: String
     ): Result<Business> = withContext(Dispatchers.IO) {
         try {
             val response = apiCall()
@@ -90,9 +85,7 @@ class BusinessRepositoryImpl @Inject constructor(
 
     override suspend fun deleteBusiness(businessId: String): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            // Now returns Response<ApiResponseDto<Any?>>
             val response = apiService.deleteBusiness(businessId)
-            // Check HTTP success AND status field
             if (response.isSuccessful && response.body()?.status == "success") {
                 Result.success(Unit)
             } else {
@@ -109,12 +102,10 @@ class BusinessRepositoryImpl @Inject constructor(
     override suspend fun getMyBusinesses(filter: BusinessFilter): Result<List<BusinessListItemUiModel>> = withContext(Dispatchers.IO) {
         try {
             val filterString = filter.name
-            // Now returns Response<ApiResponseDto<List<BusinessListItemDto>>>
             val response = apiService.getMyBusinesses(filter = filterString)
 
-            // Check HTTP success AND status field AND data field
             if (response.isSuccessful && response.body()?.status == "success" && response.body()?.data != null) {
-                val dtoList = response.body()!!.data!! // data is List<BusinessListItemDto>
+                val dtoList = response.body()!!.data!!
                 val uiModelList = dtoList.map { dto -> dto.toUiModel() }
                 Result.success(uiModelList)
             } else {

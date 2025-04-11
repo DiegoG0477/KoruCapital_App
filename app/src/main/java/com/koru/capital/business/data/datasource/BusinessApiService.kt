@@ -1,9 +1,6 @@
-// capital/business/data/datasource/BusinessApiService.kt
 package com.koru.capital.business.data.datasource
 
-// Import generic wrapper
 import com.koru.capital.core.data.dto.ApiResponseDto
-// Specific DTOs for Business
 import com.koru.capital.business.data.dto.BusinessDto
 import com.koru.capital.business.data.dto.BusinessListItemDto
 
@@ -27,12 +24,12 @@ interface BusinessApiService {
         @Part("businessModel") businessModel: RequestBody,
         @Part("monthlyIncome") monthlyIncome: RequestBody,
         @Part imageUrl: MultipartBody.Part?
-    ): Response<ApiResponseDto<BusinessDto>> // <-- Wrap BusinessDto
+    ): Response<ApiResponseDto<BusinessDto>>
 
     @GET("businesses/{id}")
     suspend fun getBusinessDetails(
         @Path("id") businessId: String
-    ): Response<ApiResponseDto<BusinessDto>> // <-- Wrap BusinessDto
+    ): Response<ApiResponseDto<BusinessDto>>
 
     @Multipart
     @PUT("businesses/{id}")
@@ -47,15 +44,15 @@ interface BusinessApiService {
         @Part("businessModel") businessModel: RequestBody?,
         @Part("monthlyIncome") monthlyIncome: RequestBody?,
         @Part imageUrl: MultipartBody.Part?
-    ): Response<ApiResponseDto<BusinessDto>> // <-- Wrap BusinessDto
+    ): Response<ApiResponseDto<BusinessDto>>
 
     @GET("businesses/mine")
     suspend fun getMyBusinesses(
-        @Query("filter") filter: String // "OWNED", "SAVED", "PARTNERED"
-    ): Response<ApiResponseDto<List<BusinessListItemDto>>> // <-- Wrap List
+        @Query("filter") filter: String
+    ): Response<ApiResponseDto<List<BusinessListItemDto>>>
 
     @DELETE("businesses/{id}")
     suspend fun deleteBusiness(
         @Path("id") businessId: String
-    ): Response<ApiResponseDto<Any?>> // <-- Wrap with generic data
+    ): Response<ApiResponseDto<Any?>>
 }

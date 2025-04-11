@@ -56,21 +56,3 @@ private fun MyBusinessesScreenErrorPreview() {
     }
 }
 
-// Add Preview with data once BusinessUiModel and BusinessList are defined
-/*
-@Preview(showBackground = true, name = "With Data")
-@Composable
-private fun MyBusinessesScreenWithDataPreview() {
-    val sampleBusinesses = listOf(
-        BusinessUiModel(id = "1", name = "My First Business"),
-        BusinessUiModel(id = "2", name = "Another Venture")
-    )
-    MexiCrowdTheme {
-        MyBusinessesContent(
-            uiState = MyBusinessesUiState(isLoading = false, businesses = sampleBusinesses),
-            onAddBusiness = {},
-            onFilterSelected = {}
-        )
-    }
-}
-*/

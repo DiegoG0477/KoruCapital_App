@@ -23,22 +23,16 @@ data class HomeUiState(
     val isLoadingMore: Boolean = false,
     val errorMessage: String? = null,
     val businesses: List<BusinessCardUiModel> = emptyList(),
-    val activeFilters: Set<FilterType> = emptySet(), // Still useful to show active buttons
+    val activeFilters: Set<FilterType> = emptySet(),
 
-    // --- Specific Filter Values ---
-    val selectedCategoryId: String? = null, // Example: Store selected category ID
-    val selectedMaxInvestment: Int? = null, // Example: If MORE_FILTERS sets max investment
-    // Add other specific filter values as needed (minProfit, locationId, etc.)
-    // val selectedLocationId: String? = null,
-    // val selectedMinProfit: Double? = null,
+    val selectedCategoryId: String? = null,
+    val selectedMaxInvestment: Int? = null,
 
-    // --- Pagination State ---
     val currentPage: Int = 1,
     val canLoadMore: Boolean = true,
     val endReached: Boolean = false
 )
 
-// BusinessCardUiModel remains the same (defined likely in the same file or imported)
 data class BusinessCardUiModel(
     val id: String,
     val imageUrl: String?,
@@ -55,15 +49,12 @@ data class BusinessCardUiModel(
     val isSaved: Boolean,
     val isLiked: Boolean
 )
-// UiState defined above with added fields (selectedCategoryId, selectedMaxInvestment)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getBusinessesUseCase: GetBusinessesUseCase,
     private val toggleSaveBusinessUseCase: ToggleSaveBusinessUseCase,
     private val toggleLikeBusinessUseCase: ToggleLikeBusinessUseCase
-    // Inject UseCases needed for fetching categories/locations for filter dialogs if applicable
-    // private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -77,23 +68,10 @@ class HomeViewModel @Inject constructor(
 
     init {
         loadBusinesses(loadInitial = true)
-        // Load categories/locations for filter dialogs if needed
-        // loadFilterOptions()
     }
 
-    // Load data for filter dialogs (Example)
-    /*
-    private fun loadFilterOptions() {
-        viewModelScope.launch {
-            // Example: Load categories
-             getCategoriesUseCase().collect { categories ->
-                 // Store categories in a separate state or update uiState if needed for dialog
-             }
-        }
-    }
-    */
 
-    fun loadInitialOrRefreshBusinesses() { // Removed filters param, uses state directly
+    fun loadInitialOrRefreshBusinesses() {
         val currentState = _uiState.value
         _uiState.update {
             it.copy(
@@ -101,10 +79,9 @@ class HomeViewModel @Inject constructor(
                 currentPage = 1,
                 canLoadMore = true,
                 endReached = false
-                // Filters (activeFilters, selectedCategoryId, etc.) remain as they are
             )
         }
-        loadBusinesses(loadInitial = true) // Load page 1 with current state filters
+        loadBusinesses(loadInitial = true)
     }
 
     fun loadMoreBusinesses() {
@@ -117,7 +94,7 @@ class HomeViewModel @Inject constructor(
     private fun loadBusinesses(loadInitial: Boolean) {
         fetchJob?.cancel()
 
-        val currentState = _uiState.value // Get current state values
+        val currentState = _uiState.value
         val pageToLoad = if (loadInitial) 1 else currentState.currentPage
 
         fetchJob = viewModelScope.launch {
@@ -129,20 +106,17 @@ class HomeViewModel @Inject constructor(
                 )
             }
 
-            // Call UseCase with specific filter values from the state
             val result = getBusinessesUseCase(
                 page = pageToLoad,
                 limit = PAGE_LIMIT,
                 selectedCategoryId = currentState.selectedCategoryId,
                 maxInvestment = currentState.selectedMaxInvestment,
                 isNearby = currentState.activeFilters.contains(FilterType.NEAR_ME),
-                // Pass other filters from state if added
-                // otherFilters = mapOf("minProfit" to currentState.selectedMinProfit.toString())
             )
 
             result.fold(
                 onSuccess = { paginatedData ->
-                    _uiState.update { current -> // Use 'current' for clarity
+                    _uiState.update { current ->
                         current.copy(
                             isLoadingInitial = false,
                             isLoadingMore = false,
@@ -167,90 +141,70 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    // --- Filter Handling ---
 
     fun toggleSimpleFilter(filter: FilterType) {
-        // Handle simple toggle filters like NEAR_ME
         val currentFilters = _uiState.value.activeFilters
         val newFilters = if (currentFilters.contains(filter)) {
             currentFilters - filter
         } else {
             currentFilters + filter
         }
-        // Update activeFilters set and trigger refresh
         _uiState.update { it.copy(activeFilters = newFilters) }
         loadInitialOrRefreshBusinesses()
     }
 
     fun onCategoryFilterClicked() {
-        // Logic to show a Category selection dialog/screen
-        // This dialog would likely fetch categories (if not loaded)
-        // When a category is selected in the dialog, call onCategorySelected
-        _uiState.update { it.copy(activeFilters = it.activeFilters + FilterType.CATEGORY) } // Keep button active
-        // Trigger dialog display (e.g., via another state variable like showCategoryDialog = true)
+        _uiState.update { it.copy(activeFilters = it.activeFilters + FilterType.CATEGORY) }
         println("Category filter clicked - Implement dialog/selection logic")
     }
 
     fun onMoreFiltersClicked() {
-        // Logic to show the "More Filters" dialog/screen
-        // This dialog allows setting values like maxInvestment, location, etc.
-        // When filters are applied in the dialog, call onApplyMoreFilters
-        _uiState.update { it.copy(activeFilters = it.activeFilters + FilterType.MORE_FILTERS) } // Keep button active
-        // Trigger dialog display (e.g., showMoreFiltersDialog = true)
+        _uiState.update { it.copy(activeFilters = it.activeFilters + FilterType.MORE_FILTERS) }
         println("More Filters clicked - Implement dialog/selection logic")
     }
 
 
-    // Called when a category IS selected from the dialog/screen
     fun onCategorySelected(categoryId: String?) {
-        // Update the specific category ID state and trigger refresh
         _uiState.update {
-            val updatedFilters = if (categoryId == null) it.activeFilters - FilterType.CATEGORY else it.activeFilters // Deactivate button if category cleared
+            val updatedFilters = if (categoryId == null) it.activeFilters - FilterType.CATEGORY else it.activeFilters
             it.copy(selectedCategoryId = categoryId, activeFilters = updatedFilters)
         }
         loadInitialOrRefreshBusinesses()
-        // Hide category dialog if shown via state
     }
 
-    // Called when "Apply" is clicked in the "More Filters" dialog
-    fun onApplyMoreFilters(maxInvestment: Int?, /* other filter values */ ) {
-        // Update specific filter states and trigger refresh
-        val hasSpecificFilters = maxInvestment != null // Add checks for other filters
+    fun onApplyMoreFilters(maxInvestment: Int?,  ) {
+        val hasSpecificFilters = maxInvestment != null
         _uiState.update {
-            val updatedFilters = if (!hasSpecificFilters) it.activeFilters - FilterType.MORE_FILTERS else it.activeFilters // Deactivate button if all specific filters cleared
+            val updatedFilters = if (!hasSpecificFilters) it.activeFilters - FilterType.MORE_FILTERS else it.activeFilters
             it.copy(
                 selectedMaxInvestment = maxInvestment,
-                // Update other filter states...
                 activeFilters = updatedFilters
             )
         }
         loadInitialOrRefreshBusinesses()
-        // Hide more filters dialog
     }
 
-    // Central function called by UI FilterRow
     fun handleFilterClick(filterType: FilterType) {
         when(filterType) {
-            FilterType.NEAR_ME -> toggleSimpleFilter(filterType) // Simple toggle
-            FilterType.LESS_THAN_50K -> { // Example of handling a filter that sets a specific value
+            FilterType.NEAR_ME -> toggleSimpleFilter(filterType)
+            FilterType.LESS_THAN_50K -> {
                 val currentMax = _uiState.value.selectedMaxInvestment
                 val isActive = _uiState.value.activeFilters.contains(filterType)
-                val newMax = if (isActive) null else 50000 // Toggle 50k value
+                val newMax = if (isActive) null else 50000
                 val newFilters = if (isActive) {
                     _uiState.value.activeFilters - filterType
                 } else {
-                    _uiState.value.activeFilters + filterType // Assumes only one investment filter active at a time
+                    _uiState.value.activeFilters + filterType
                 }
                 _uiState.update { it.copy(selectedMaxInvestment = newMax, activeFilters = newFilters)}
                 loadInitialOrRefreshBusinesses()
             }
-            FilterType.CATEGORY -> onCategoryFilterClicked() // Opens category selection
-            FilterType.MORE_FILTERS -> onMoreFiltersClicked() // Opens more filters dialog
+            FilterType.CATEGORY -> onCategoryFilterClicked()
+            FilterType.MORE_FILTERS -> onMoreFiltersClicked()
         }
     }
 
 
-    // toggleSaveBusiness and toggleLikeBusiness remain the same
     fun toggleSaveBusiness(businessId: String) {
         val originalState = _uiState.value
         _uiState.update { currentState ->
@@ -261,13 +215,12 @@ class HomeViewModel @Inject constructor(
                         savedCount = if (business.isSaved) (business.savedCount ?: 1) - 1 else (business.savedCount ?: 0) + 1
                     )
                 } else { business }
-            }.filter { (it.savedCount ?: 0) >= 0 } // Ensure count doesn't go negative visually
+            }.filter { (it.savedCount ?: 0) >= 0 }
             currentState.copy(businesses = updatedBusinesses, errorMessage = null)
         }
         viewModelScope.launch {
             val result = toggleSaveBusinessUseCase(businessId)
             result.onFailure { exception ->
-                // Revert UI on failure and show error
                 _uiState.update { originalState.copy(errorMessage = "Error al guardar: ${exception.message}") }
             }
         }
@@ -284,7 +237,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val result = toggleLikeBusinessUseCase(businessId)
             result.onFailure { exception ->
-                // Revert UI on failure and show error
                 _uiState.update { originalState.copy(errorMessage = "Error en 'Me Gusta': ${exception.message}") }
             }
         }

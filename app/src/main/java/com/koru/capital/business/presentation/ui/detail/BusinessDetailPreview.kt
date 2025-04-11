@@ -6,15 +6,13 @@ import com.koru.capital.business.domain.model.Business
 import com.koru.capital.business.presentation.viewmodel.BusinessDetailUiState
 import com.koru.capital.core.ui.theme.KoruTheme
 
-// Sample data for preview (adjust domain model as needed)
 val sampleBusinessDetail = Business(
     name = "Tacos Finos 'El Güero'", description = "La experiencia culinaria definitiva en tacos. Usamos ingredientes frescos de origen local y recetas secretas familiares. Buscamos expandirnos a nuevas ubicaciones.",
-    investment = 120000.0, profitPercentage = 35.0, categoryId = 101, municipalityId = 10,
+    investment = 120000.0, profitPercentage = 35.0, categoryId = 101, municipalityId = "GUAD-JAL-MX",
     businessModel = "Restaurante físico con servicio a domicilio a través de apps. Modelo de franquicia en desarrollo.",
     monthlyIncome = 65000.0,
-    // Added fields for preview based on DetailContent needs
     categoryName = "Restaurantes", locationName = "Zapopan, JAL", investmentRange = "100k-150k",
-    imageUrl = null, // Use placeholder
+    imageUrl = null,
     ownerName = "Don Güero", ownerEmail = "guero@tacosfinos.com", ownerPhone = "+52 33 1234 5678"
 )
 
@@ -59,7 +57,7 @@ private fun BusinessDetailAssociationDialogPreview() {
             uiState = BusinessDetailUiState(
                 isLoading = false,
                 business = sampleBusinessDetail,
-                showAssociationDialog = true // Show the dialog
+                showAssociationDialog = true
             ),
             onBackClick = {}, onAssociateClick = {}, onDismissAssociationDialog = {}
         )

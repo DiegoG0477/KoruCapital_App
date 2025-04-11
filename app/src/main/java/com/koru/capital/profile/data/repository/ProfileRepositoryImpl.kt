@@ -1,12 +1,8 @@
-// capital/profile/data/repository/ProfileRepositoryImpl.kt
 package com.koru.capital.profile.data.repository
 
-// Import generic wrapper
 import com.koru.capital.core.data.dto.ApiResponseDto
-// Mapper and API Service
 import com.koru.capital.profile.data.mapper.toDomain
 import com.koru.capital.profile.data.datasource.ProfileApiService
-// Domain Model and Repository Interface
 import com.koru.capital.profile.domain.model.UserProfile
 import com.koru.capital.profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,14 +17,14 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun getMyProfile(): Result<UserProfile> = withContext(Dispatchers.IO) {
         try {
-            // Now returns Response<ApiResponseDto<UserProfileDto>>
             val response = apiService.getMyProfile()
-            // Check HTTP success AND status field AND data field
-            if (response.isSuccessful && response.body()?.status == "success" && response.body()?.data != null) {
-                val profileDto = response.body()!!.data!! // data is UserProfileDto
+            val apiResponseBody = response.body()
+
+            if (response.isSuccessful && apiResponseBody?.status == "success" && apiResponseBody.data?.user != null) {
+                val profileDto = apiResponseBody.data.user!!
                 Result.success(profileDto.toDomain())
             } else {
-                val errorMsg = response.body()?.message
+                val errorMsg = apiResponseBody?.message
                     ?: response.errorBody()?.string()?.take(200)
                     ?: "Error fetching profile (${response.code()})"
                 Result.failure(Exception(errorMsg))
@@ -47,7 +43,6 @@ class ProfileRepositoryImpl @Inject constructor(
         profileImage: MultipartBody.Part?
     ): Result<UserProfile> = withContext(Dispatchers.IO) {
         try {
-            // Now returns Response<ApiResponseDto<UserProfileDto>>
             val response = apiService.updateMyProfile(
                 firstName = firstName,
                 lastName = lastName,
@@ -56,13 +51,13 @@ class ProfileRepositoryImpl @Inject constructor(
                 instagramHandle = instagramHandle,
                 profileImage = profileImage
             )
+            val apiResponseBody = response.body()
 
-            // Check HTTP success AND status field AND data field
-            if (response.isSuccessful && response.body()?.status == "success" && response.body()?.data != null) {
-                val updatedProfileDto = response.body()!!.data!! // data is UserProfileDto
+            if (response.isSuccessful && apiResponseBody?.status == "success" && apiResponseBody.data?.user != null) {
+                val updatedProfileDto = apiResponseBody.data.user!!
                 Result.success(updatedProfileDto.toDomain())
             } else {
-                val errorMsg = response.body()?.message
+                val errorMsg = apiResponseBody?.message
                     ?: response.errorBody()?.string()?.take(200)
                     ?: "Error updating profile (${response.code()})"
                 Result.failure(Exception(errorMsg))

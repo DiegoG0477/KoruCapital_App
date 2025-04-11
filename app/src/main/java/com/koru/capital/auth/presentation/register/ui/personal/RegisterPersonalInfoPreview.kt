@@ -23,7 +23,7 @@ private fun RegisterPersonalInfoContentEmptyPreview() {
         RegisterPersonalInfoContent(
             uiState = RegisterUiState(
                 currentStep = RegisterStep.PERSONAL_INFO,
-                countries = listOf(sampleCountry), // Provide some data for preview
+                countries = listOf(sampleCountry),
                 states = listOf(sampleState)
             ),
             formattedBirthDate = "",
@@ -76,7 +76,6 @@ private fun RegisterPersonalInfoContentErrorPreview() {
             uiState = RegisterUiState(
                 currentStep = RegisterStep.PERSONAL_INFO,
                 firstName = "Ana",
-                // Missing last name, date, municipality
                 selectedCountry = sampleCountry,
                 selectedState = sampleState,
                 countries = listOf(sampleCountry),
@@ -106,8 +105,8 @@ private fun RegisterPersonalInfoContentLoadingDropdownsPreview() {
                 currentStep = RegisterStep.PERSONAL_INFO,
                 firstName = "Test",
                 lastName = "User",
-                isLoading = true, // Simulate loading state
-                countries = emptyList() // No countries loaded yet
+                isLoading = true,
+                countries = emptyList()
             ),
             formattedBirthDate = "",
             onFirstNameChanged = {},
@@ -132,7 +131,7 @@ private fun RegisterPersonalInfoContentSubmittingPreview() {
                 firstName = "Juan", lastName = "Perez", birthDate = LocalDate.of(1995, 5, 15),
                 selectedCountry = sampleCountry, selectedState = sampleState, selectedMunicipality = sampleMunicipality,
                 countries = listOf(sampleCountry), states = listOf(sampleState), municipalities = listOf(sampleMunicipality),
-                isLoading = true // Simulate submission loading
+                isLoading = true
             ),
             formattedBirthDate = "15/05/1995",
             onFirstNameChanged = {}, onLastNameChanged = {}, onBirthDateClick = {}, onCountrySelected = {}, onStateSelected = {}, onMunicipalitySelected = {}, onSubmitClick = {}

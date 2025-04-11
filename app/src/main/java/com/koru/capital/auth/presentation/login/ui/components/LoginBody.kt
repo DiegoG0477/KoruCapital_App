@@ -29,7 +29,7 @@ import com.koru.capital.core.ui.theme.KoruWhite
 
 @Composable
 fun LoginBody(
-    uiState: LoginUiState, // Receive state
+    uiState: LoginUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
@@ -38,7 +38,7 @@ fun LoginBody(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 24.dp), // Adjust padding
+            .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -51,7 +51,7 @@ fun LoginBody(
                 keyboardType = androidx.compose.ui.text.input.KeyboardType.Email,
                 imeAction = androidx.compose.ui.text.input.ImeAction.Next
             ),
-            isError = !uiState.email.matches(Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) && uiState.email.isNotEmpty(), // Example basic validation display
+            isError = !uiState.email.matches(Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) && uiState.email.isNotEmpty(),
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
@@ -64,11 +64,10 @@ fun LoginBody(
                 keyboardType = androidx.compose.ui.text.input.KeyboardType.Password,
                 imeAction = androidx.compose.ui.text.input.ImeAction.Done
             ),
-            keyboardActions = androidx.compose.foundation.text.KeyboardActions(onDone = { onLoginClick() }), // Trigger login on keyboard done
+            keyboardActions = androidx.compose.foundation.text.KeyboardActions(onDone = { onLoginClick() }),
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        // Display general error message
         uiState.errorMessage?.let { error ->
             Text(
                 text = error,
@@ -79,19 +78,19 @@ fun LoginBody(
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp)) // Increase space before button
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = onLoginClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp), // Standard height
+                .height(56.dp),
             enabled = !uiState.isLoading,
             colors = ButtonDefaults.buttonColors(
                 containerColor = KoruOrangeAlternative,
                 contentColor = KoruWhite
             ),
-            shape = RoundedCornerShape(12.dp) // Consistent shape
+            shape = RoundedCornerShape(12.dp)
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp), color = KoruWhite, strokeWidth = 2.dp)
@@ -104,13 +103,5 @@ fun LoginBody(
                 )
             }
         }
-        // Optional: Add "Forgot Password?" link
-//        Text(
-//            text = "¿Olvidaste tu contraseña?",
-//            color = KoruOrangeAlternative,
-//            fontSize = 14.sp,
-//            fontFamily = funnelSansFamily,
-//            modifier = Modifier.padding(top = 16.dp).clickable { /* TODO: Handle forgot password */ }
-//        )
     }
 }

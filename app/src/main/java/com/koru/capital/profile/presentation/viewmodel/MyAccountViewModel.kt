@@ -2,7 +2,7 @@ package com.koru.capital.profile.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.koru.capital.auth.domain.usecase.LogoutUseCase // <-- Importar
+import com.koru.capital.auth.domain.usecase.LogoutUseCase
 import com.koru.capital.profile.domain.model.UserProfile
 import com.koru.capital.profile.domain.usecase.GetMyProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,13 +17,13 @@ data class MyAccountUiState(
     val isLoading: Boolean = true,
     val userProfile: UserProfile? = null,
     val errorMessage: String? = null,
-    val isLoggingOut: Boolean = false // <-- Añadir estado para el proceso de logout
+    val isLoggingOut: Boolean = false
 )
 
 @HiltViewModel
 class MyAccountViewModel @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
-    private val logoutUseCase: LogoutUseCase // <-- Inyectar LogoutUseCase
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyAccountUiState())
@@ -34,7 +34,6 @@ class MyAccountViewModel @Inject constructor(
     }
 
     fun loadProfile() {
-        // ... (sin cambios) ...
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             val result = getMyProfileUseCase()
@@ -53,20 +52,16 @@ class MyAccountViewModel @Inject constructor(
         }
     }
 
-    // --- LÓGICA LOGOUT ---
     fun onLogoutClick() {
-        if (_uiState.value.isLoggingOut) return // Prevenir clicks múltiples
+        if (_uiState.value.isLoggingOut) return
 
         _uiState.update { it.copy(isLoggingOut = true, errorMessage = null) }
         viewModelScope.launch {
             logoutUseCase().fold(
                 onSuccess = {
-                    // El token se limpió. La navegación se dispara desde la Screen.
-                    // No es necesario hacer más aquí, pero podrías limpiar estado específico del VM si lo hubiera.
-                    _uiState.update { it.copy(isLoggingOut = false) } // Resetear estado de carga
+                    _uiState.update { it.copy(isLoggingOut = false) }
                 },
                 onFailure = { exception ->
-                    // Mostrar error si falla la limpieza del token (raro)
                     _uiState.update {
                         it.copy(
                             isLoggingOut = false,
@@ -77,7 +72,6 @@ class MyAccountViewModel @Inject constructor(
             )
         }
     }
-    // onEditProfileClick y onSettingsClick (placeholders)
-    fun onEditProfileClick() { /* Trigger navigation event */ }
-    fun onSettingsClick() { /* Trigger navigation event */ }
+    fun onEditProfileClick() {  }
+    fun onSettingsClick() {  }
 }

@@ -19,28 +19,28 @@ import com.koru.capital.core.ui.theme.KoruOrangeAlternative
 import com.koru.capital.core.ui.theme.KoruWhite
 
 @Composable
-fun LoginTop(modifier: Modifier = Modifier) { // Pass modifier
+fun LoginTop(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp)) // Combine clips
-            .background(KoruOrangeAlternative) // Use theme color
-            .padding(start = 40.dp, top = 40.dp, end = 40.dp, bottom = 20.dp) // Add vertical padding
-            .fillMaxWidth() // Ensure it takes full width
+            .clip(RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp))
+            .background(KoruOrangeAlternative)
+            .padding(start = 40.dp, top = 40.dp, end = 40.dp, bottom = 20.dp)
+            .fillMaxWidth()
     ) {
         Text(
             text = "KoruCapital",
-            color = KoruWhite, // Use theme color
-            fontWeight = FontWeight.Bold, // Bolder
+            color = KoruWhite,
+            fontWeight = FontWeight.Bold,
             fontSize = 23.sp,
-            fontFamily = funnelSansFamily // Use custom font
+            fontFamily = funnelSansFamily
         )
-        Spacer(modifier = Modifier.height(8.dp)) // Reduced spacer
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Invierte en tu comunidad, crece con ella",
             color = KoruWhite,
-            fontWeight = FontWeight.Normal, // Normal weight might be better
+            fontWeight = FontWeight.Normal,
             fontSize = 18.sp,
-            fontFamily = funnelSansFamily // Use custom font
+            fontFamily = funnelSansFamily
         )
     }
 }

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.koru.capital.core.ui.funnelSansFamily
-import com.koru.capital.core.ui.theme.* // Import theme colors
+import com.koru.capital.core.ui.theme.*
 
 @Composable
 fun LabeledTextField(
@@ -41,7 +41,7 @@ fun LabeledTextField(
             fontFamily = funnelSansFamily,
             style = TextStyle(
                 fontSize = 14.sp,
-                color = KoruDarkGray // Use theme color
+                color = KoruDarkGray
             ),
             modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
         )
@@ -61,12 +61,12 @@ fun LabeledTextField(
             singleLine = singleLine,
             maxLines = maxLines,
             shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.colors( // Use consistent form colors
+            colors = TextFieldDefaults.colors(
                 focusedContainerColor = KoruInputBackground,
                 unfocusedContainerColor = KoruInputBackground,
                 disabledContainerColor = KoruInputBackground.copy(alpha = 0.5f),
                 errorContainerColor = KoruInputBackground,
-                focusedIndicatorColor = KoruOrange, // Or KoruOrangeAlternative if preferred for register
+                focusedIndicatorColor = KoruOrange,
                 unfocusedIndicatorColor = KoruTransparent,
                 disabledIndicatorColor = KoruTransparent,
                 errorIndicatorColor = KoruRed,
@@ -90,7 +90,7 @@ fun LabeledTextField(
                 text = errorMessage,
                 color = KoruRed,
                 fontSize = 12.sp,
-                modifier = Modifier.padding(start = 12.dp, top = 4.dp) // Indent error message slightly
+                modifier = Modifier.padding(start = 12.dp, top = 4.dp)
             )
         }
     }

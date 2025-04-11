@@ -30,17 +30,14 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule { // <-- Cambiar a abstract class para @Binds
+abstract class RepositoryModule {
 
-    @Binds // Usar Binds para la nueva implementación
+    @Binds
     @Singleton
     abstract fun bindTokenStorage(impl: DataStoreTokenStorage): TokenStorage
 
-    @Binds @Singleton abstract fun bindFileRepository(impl: FileRepositoryImpl): FileRepository // Corregir interfaz completa
-    // Use this if using Firebase:
-    // @Binds @Singleton abstract fun bindFileRepository(impl: FirebaseFileRepositoryImpl): FileRepository
+    @Binds @Singleton abstract fun bindFileRepository(impl: FileRepositoryImpl): FileRepository
 
-    // Mover @Provides a un object companion o a otro @Module
     companion object {
         @Provides
         @Singleton
@@ -76,7 +73,7 @@ abstract class RepositoryModule { // <-- Cambiar a abstract class para @Binds
         @Singleton
         fun provideAuthRepository(
             apiService: AuthApiService,
-            tokenStorage: TokenStorage // Hilt sabe cual inyectar gracias a @Binds
+            tokenStorage: TokenStorage
         ): AuthRepository {
             return AuthRepositoryImpl(apiService, tokenStorage)
         }

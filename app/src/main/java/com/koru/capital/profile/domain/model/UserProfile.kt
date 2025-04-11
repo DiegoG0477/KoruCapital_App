@@ -4,13 +4,10 @@ data class UserProfile(
     val userId: String?,
     val firstName: String?,
     val lastName: String?,
-    val email: String?, // Assuming email is part of the profile
+    val email: String?,
     val profileImageUrl: String?,
     val bio: String?,
     val linkedInUrl: String?,
     val instagramUrl: String?,
-    // Add other fields like location, interests, etc. if needed
-    // val city: String?,
-    // val state: String?,
-    val joinDate: String? // Or LocalDate/Date
+    val joinDate: String?
 )

@@ -17,7 +17,7 @@ fun AuthLabeledTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    isPasswordToggleVisible: Boolean = false, // Add parameter for visibility toggle if needed
+    isPasswordToggleVisible: Boolean = false,
     onPasswordToggleClick: (() -> Unit)? = null,
     visualTransformation: androidx.compose.ui.text.input.VisualTransformation = androidx.compose.ui.text.input.VisualTransformation.None,
     keyboardOptions: androidx.compose.foundation.text.KeyboardOptions = androidx.compose.foundation.text.KeyboardOptions.Default,
@@ -30,33 +30,31 @@ fun AuthLabeledTextField(
             text = label,
             style = TextStyle(
                 fontSize = 14.sp,
-                color = KoruDarkGray, // Use theme color
+                color = KoruDarkGray,
                 fontFamily = funnelSansFamily
             ),
             modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
         )
-        OutlinedTextField( // Using OutlinedTextField for consistency with other forms
+        OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp), // Consistent shape
+            shape = RoundedCornerShape(8.dp),
             singleLine = true,
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             isError = isError,
-            trailingIcon = if (isPasswordToggleVisible && onPasswordToggleClick != null) { // Only show if needed
+            trailingIcon = if (isPasswordToggleVisible && onPasswordToggleClick != null) {
                 {
-                    // Add Eye icon logic here similar to Register password fields
-                    // IconButton(onClick = onPasswordToggleClick) { Icon(...) }
                 }
             } else null,
-            colors = TextFieldDefaults.colors( // Consistent styling
+            colors = TextFieldDefaults.colors(
                 focusedContainerColor = KoruInputBackground,
                 unfocusedContainerColor = KoruInputBackground,
-                disabledContainerColor = KoruDisabledInput, // Specific disabled color?
+                disabledContainerColor = KoruDisabledInput,
                 errorContainerColor = KoruInputBackground,
-                focusedIndicatorColor = KoruOrangeAlternative, // Login uses alternative orange?
+                focusedIndicatorColor = KoruOrangeAlternative,
                 unfocusedIndicatorColor = KoruTransparent,
                 disabledIndicatorColor = KoruTransparent,
                 errorIndicatorColor = KoruRed,
@@ -64,7 +62,6 @@ fun AuthLabeledTextField(
                 unfocusedTextColor = KoruBlack,
                 disabledTextColor = KoruDarkGray.copy(alpha = 0.7f),
                 errorTextColor = KoruBlack,
-                // Add placeholder/icon colors if needed
             )
         )
         if (isError && errorMessage != null) {

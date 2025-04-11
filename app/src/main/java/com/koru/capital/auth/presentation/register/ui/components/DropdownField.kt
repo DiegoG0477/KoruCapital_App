@@ -13,18 +13,18 @@ import androidx.compose.ui.unit.sp
 import com.koru.capital.core.ui.funnelSansFamily
 import com.koru.capital.core.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class) // For ExposedDropdownMenuBox
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> DropdownField(
     label: String,
     options: List<T>,
     selectedOption: T?,
     onOptionSelected: (T?) -> Unit,
-    optionToString: (T) -> String, // Lambda to convert option to display string
+    optionToString: (T) -> String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     placeholder: String = "Selecciona...",
-    isError: Boolean = false, // Optional error state
+    isError: Boolean = false,
     errorMessage: String? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -38,22 +38,22 @@ fun <T> DropdownField(
         )
 
         ExposedDropdownMenuBox(
-            expanded = enabled && expanded, // Only expand if enabled
+            expanded = enabled && expanded,
             onExpandedChange = { if (enabled) expanded = !expanded },
             modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
                 value = selectedOption?.let { optionToString(it) } ?: "",
-                onValueChange = {}, // Read-only
+                onValueChange = {},
                 readOnly = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(), // Important for positioning
+                    .menuAnchor(),
                 placeholder = { Text(placeholder) },
                 enabled = enabled,
                 isError = isError,
                 shape = RoundedCornerShape(8.dp),
-                colors = TextFieldDefaults.colors( // Consistent styling
+                colors = TextFieldDefaults.colors(
                     focusedContainerColor = KoruInputBackground,
                     unfocusedContainerColor = KoruInputBackground,
                     disabledContainerColor = KoruInputBackground.copy(alpha = 0.5f),
@@ -70,7 +70,6 @@ fun <T> DropdownField(
                     unfocusedTrailingIconColor = KoruDarkGray,
                     disabledTrailingIconColor = KoruDarkGray.copy(alpha = 0.5f),
                     errorTrailingIconColor = KoruRed,
-                    // Adjust placeholder color when disabled
                     disabledPlaceholderColor = KoruDarkGray.copy(alpha = 0.5f),
                 ),
                 trailingIcon = {
@@ -78,11 +77,10 @@ fun <T> DropdownField(
                 }
             )
 
-            // Menu definition
             ExposedDropdownMenu(
                 expanded = enabled && expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.fillMaxWidth() // Match text field width
+                modifier = Modifier.fillMaxWidth()
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
@@ -99,16 +97,6 @@ fun <T> DropdownField(
                         }
                     )
                 }
-                // Optional: Add a "None" or "Clear" option?
-                /*
-                DropdownMenuItem(
-                    text = { Text("Ninguno", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic) },
-                    onClick = {
-                        onOptionSelected(null)
-                        expanded = false
-                    }
-                )
-                */
             }
         }
         if (isError && errorMessage != null) {

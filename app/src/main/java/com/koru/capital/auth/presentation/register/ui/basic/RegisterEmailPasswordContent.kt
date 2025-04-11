@@ -42,7 +42,7 @@ fun RegisterEmailPasswordContent(
     onTogglePasswordVisibility: () -> Unit,
     onToggleConfirmPasswordVisibility: () -> Unit,
     onContinueClick: () -> Unit,
-    onLoginClick: () -> Unit, // Callback for "Inicia Sesión" click
+    onLoginClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -55,8 +55,7 @@ fun RegisterEmailPasswordContent(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- Header ---
-        Spacer(modifier = Modifier.height(32.dp)) // Add space at the top
+        Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = "Crear una Cuenta",
             color = KoruBlack,
@@ -68,9 +67,9 @@ fun RegisterEmailPasswordContent(
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 32.dp, vertical = 20.dp), // Adjust padding
+                .padding(horizontal = 32.dp, vertical = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center // Center horizontally
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "¿Ya tienes una cuenta? ",
@@ -79,16 +78,15 @@ fun RegisterEmailPasswordContent(
             )
             Text(
                 text = "Inicia Sesión",
-                color = KoruOrangeAlternative, // Use theme color
+                color = KoruOrangeAlternative,
                 fontFamily = funnelSansFamily,
-                fontWeight = FontWeight.Bold, // Make it bolder
-                textDecoration = TextDecoration.Underline, // Add underline
-                modifier = Modifier.clickable(onClick = onLoginClick) // Make clickable
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable(onClick = onLoginClick)
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Form Fields ---
         LabeledTextField(
             value = uiState.email,
             onValueChange = onEmailChanged,
@@ -100,7 +98,7 @@ fun RegisterEmailPasswordContent(
             errorMessage = uiState.emailErrorMessage,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next // Go to next field
+                imeAction = ImeAction.Next
             ),
             modifier = Modifier.padding(vertical = 8.dp)
         )
@@ -136,7 +134,7 @@ fun RegisterEmailPasswordContent(
             onValueChange = onConfirmPasswordChanged,
             label = "Confirmar contraseña",
             leadingIcon = {
-                Icon(Lucide.LockKeyhole, contentDescription = "Confirm Password Icon", tint = KoruDarkGray) // Different icon
+                Icon(Lucide.LockKeyhole, contentDescription = "Confirm Password Icon", tint = KoruDarkGray)
             },
             trailingIcon = {
                 IconButton(onClick = onToggleConfirmPasswordVisibility) {
@@ -152,18 +150,17 @@ fun RegisterEmailPasswordContent(
             errorMessage = uiState.confirmPasswordErrorMessage,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done // Done action for the last field
+                imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    focusManager.clearFocus() // Hide keyboard
-                    onContinueClick() // Attempt to continue
+                    focusManager.clearFocus()
+                    onContinueClick()
                 }
             ),
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        // --- General Error Message ---
         if (uiState.registrationError != null && uiState.currentStep == RegisterStep.EMAIL_PASSWORD) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -178,22 +175,21 @@ fun RegisterEmailPasswordContent(
         }
 
 
-        // --- Continue Button ---
         Button(
             onClick = {
-                focusManager.clearFocus() // Hide keyboard on click
+                focusManager.clearFocus()
                 onContinueClick()
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp) // More space before button
-                .height(56.dp), // Standard button height
+                .padding(top = 24.dp)
+                .height(56.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = KoruOrangeAlternative,
                 contentColor = KoruWhite
             ),
-            shape = RoundedCornerShape(12.dp), // Consistent corner shape
-            enabled = !uiState.isLoading // Disable button when loading
+            shape = RoundedCornerShape(12.dp),
+            enabled = !uiState.isLoading
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator(
@@ -211,9 +207,8 @@ fun RegisterEmailPasswordContent(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f)) // Push disclaimer to bottom
+        Spacer(modifier = Modifier.weight(1f))
 
-        // --- Disclaimer ---
         val annotatedString = buildAnnotatedString {
             append("Al hacer click en continuar usted reconoce y está de acuerdo con nuestras ")
 
@@ -230,7 +225,7 @@ fun RegisterEmailPasswordContent(
                 append("términos de uso")
             }
             pop()
-            append(".") // Add period
+            append(".")
         }
 
         ClickableText(
@@ -238,9 +233,9 @@ fun RegisterEmailPasswordContent(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
             style = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Center,
-                color = KoruDarkGray, // Use theme color
+                color = KoruDarkGray,
                 fontFamily = funnelSansFamily,
-                fontSize = 12.sp // Slightly smaller disclaimer text
+                fontSize = 12.sp
             ),
             onClick = { offset ->
                 annotatedString.getStringAnnotations(tag = "policy", start = offset, end = offset)

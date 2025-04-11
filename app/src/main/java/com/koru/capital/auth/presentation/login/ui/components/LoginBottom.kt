@@ -19,20 +19,19 @@ import com.koru.capital.core.ui.theme.KoruOrangeAlternative
 import com.koru.capital.core.ui.theme.KoruWhite
 
 @Composable
-fun LoginBottom(onNavigateToRegister: () -> Unit) { // Add lambda
-    // Use standard Surface/Row for bottom content, not BottomAppBar if Scaffold handles nav
+fun LoginBottom(onNavigateToRegister: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = KoruWhite // Or transparent if background should show through
+        color = KoruWhite
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp), // Adjust padding
+            modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "¿No tienes una cuenta? ",
-                color = KoruBlack, // Use theme colors
+                color = KoruBlack,
                 fontFamily = funnelSansFamily
             )
             Text(
@@ -41,7 +40,7 @@ fun LoginBottom(onNavigateToRegister: () -> Unit) { // Add lambda
                 fontFamily = funnelSansFamily,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable(onClick = onNavigateToRegister) // Use lambda
+                modifier = Modifier.clickable(onClick = onNavigateToRegister)
             )
         }
     }

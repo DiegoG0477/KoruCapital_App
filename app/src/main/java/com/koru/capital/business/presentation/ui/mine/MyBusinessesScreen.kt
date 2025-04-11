@@ -12,12 +12,11 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun MyBusinessesScreen(
     onAddBusiness: () -> Unit,
-    onEditBusiness: (String) -> Unit, // Add navigation lambda for editing
+    onEditBusiness: (String) -> Unit,
     viewModel: MyBusinessesViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Handle navigation events
     LaunchedEffect(Unit) {
         viewModel.navigationEvent.collectLatest { event ->
             when (event) {
@@ -25,7 +24,7 @@ fun MyBusinessesScreen(
                     onEditBusiness(event.businessId)
                 }
                 is MyBusinessesNavigationEvent.NavigateToAddBusiness -> {
-                    onAddBusiness() // Still handle add navigation if triggered from VM
+                    onAddBusiness()
                 }
             }
         }
@@ -33,12 +32,11 @@ fun MyBusinessesScreen(
 
     MyBusinessesContent(
         uiState = uiState,
-        // Prefer triggering navigation via VM events when possible, but onAddBusiness direct nav is fine too
-        onAddBusiness = viewModel::onAddBusinessClick, // Or directly use onAddBusiness lambda if preferred
+        onAddBusiness = viewModel::onAddBusinessClick,
         onFilterSelected = viewModel::onFilterSelected,
-        onEditBusiness = viewModel::onEditBusinessClick, // Trigger VM event
-        onDeleteRequest = viewModel::onDeleteBusinessRequest, // Trigger VM delete request
-        onConfirmDelete = viewModel::onConfirmDelete, // Confirm delete in VM
-        onDismissDelete = viewModel::dismissDeleteConfirmation // Dismiss dialog in VM
+        onEditBusiness = viewModel::onEditBusinessClick,
+        onDeleteRequest = viewModel::onDeleteBusinessRequest,
+        onConfirmDelete = viewModel::onConfirmDelete,
+        onDismissDelete = viewModel::dismissDeleteConfirmation
     )
 }

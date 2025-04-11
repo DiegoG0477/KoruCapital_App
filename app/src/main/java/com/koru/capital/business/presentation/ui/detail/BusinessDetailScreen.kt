@@ -8,19 +8,16 @@ import com.koru.capital.business.presentation.viewmodel.BusinessDetailViewModel
 
 @Composable
 fun BusinessDetailScreen(
-    businessId: String, // Passed via navigation args
+    businessId: String,
     onBackClick: () -> Unit,
-    viewModel: BusinessDetailViewModel = hiltViewModel() // Scoped to this screen
+    viewModel: BusinessDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     BusinessDetailContent(
         uiState = uiState,
         onBackClick = onBackClick,
-        onAssociateClick = viewModel::onAssociateClick, // Show dialog via VM
-        onDismissAssociationDialog = viewModel::dismissAssociationDialog // Dismiss dialog via VM
-        // Pass save/like callbacks if added:
-        // onSaveToggle = viewModel::toggleSave,
-        // onLikeToggle = viewModel::toggleLike
+        onAssociateClick = viewModel::onAssociateClick,
+        onDismissAssociationDialog = viewModel::dismissAssociationDialog
     )
 }

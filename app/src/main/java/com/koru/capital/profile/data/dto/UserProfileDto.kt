@@ -1,39 +1,33 @@
 package com.koru.capital.profile.data.dto
 
-import com.google.gson.annotations.SerializedName // Importar anotación
+import com.google.gson.annotations.SerializedName
 
-/**
- * Data Transfer Object para recibir datos del perfil desde la API.
- * Usa @SerializedName para mapear los nombres del JSON de la API
- * (ej. 'first_name') a los nombres de campo de Kotlin (ej. 'firstName').
- */
+
 data class UserProfileDto(
-    // Asumiendo que la API devuelve 'id' dentro del objeto de usuario
-    @SerializedName("id") // Si la API devuelve 'userId', no necesitas esto
+    @SerializedName("id")
     val userId: String,
 
-    @SerializedName("first_name") // Mapear 'first_name' de la API
+    @SerializedName("name")
     val firstName: String,
 
-    @SerializedName("last_name") // Mapear 'last_name' de la API
+    @SerializedName("last_name")
     val lastName: String,
 
-    @SerializedName("email") // Mapear 'email' de la API (coincide pero es buena práctica)
+    @SerializedName("email")
     val email: String,
 
-    @SerializedName("profile_image_url") // Mapear 'profile_image_url' de la API
+    @SerializedName("profile_image_url")
     val profileImageUrl: String?,
 
-    @SerializedName("biography") // Mapear 'biography' de la API
+    @SerializedName("biography")
     val biography: String?,
 
-    @SerializedName("linkedin_profile") // Mapear 'linkedin_profile' de la API
-    val linkedinProfile: String?, // URL completa desde la API
+    @SerializedName("linkedin_profile")
+    val linkedinProfile: String?,
 
-    @SerializedName("instagram_handle") // Mapear 'instagram_handle' de la API
-    val instagramHandle: String?, // Solo el handle desde la API
+    @SerializedName("instagram_handle")
+    val instagramHandle: String?,
 
-    // Mapear 'created_at' de la API (formato ISO String) a 'memberSince'
     @SerializedName("created_at")
-    val memberSince: String? // El ProfileMapper lo formateará
+    val memberSince: String?
 )

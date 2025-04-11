@@ -15,15 +15,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage // Import Coil for image loading
+import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.request.transformations
 import com.composables.icons.lucide.*
-import com.koru.capital.R // Assuming sample images are in drawable
+import com.koru.capital.R
 import com.koru.capital.core.ui.funnelSansFamily
 import com.koru.capital.home.presentation.viewmodel.BusinessCardUiModel
-import com.koru.capital.core.ui.theme.* // Import theme colors
+import com.koru.capital.core.ui.theme.*
 
 @Composable
 fun BusinessCard(
@@ -33,96 +33,86 @@ fun BusinessCard(
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card( // Wrap content in a Card for better elevation and structure
+    Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onCardClick), // Make the whole card clickable
-        shape = RoundedCornerShape(12.dp), // Consistent corner rounding
+            .clickable(onClick = onCardClick),
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = KoruWhite)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // --- Image Section ---
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(business.imageUrl ?: R.drawable.sample_business) // Use actual URL or placeholder
+                    .data(business.imageUrl ?: R.drawable.sample_business)
                     .crossfade(true)
                     .build(),
-                placeholder = painterResource(R.drawable.sample_business), // Placeholder while loading
-                error = painterResource(R.drawable.sample_business), // Placeholder on error
+                placeholder = painterResource(R.drawable.sample_business),
+                error = painterResource(R.drawable.sample_business),
                 contentDescription = business.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp)
-                // No clip needed here as Card clips content
             )
 
-            // --- Content Padding ---
             Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
 
-                // --- Title ---
                 Text(
                     text = business.title,
-                    fontSize = 16.sp, // Slightly larger title
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = funnelSansFamily,
                     textAlign = TextAlign.Start,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis // Handle long titles
+                    overflow = TextOverflow.Ellipsis
                 )
 
-                // --- Tags Section ---
                 Row(
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .fillMaxWidth(),
-                    // SpaceBetween might create too much space, consider Start or SpacedBy
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    business.category?.let { BusinessTag(icon = Lucide.Tag, text = it) } // Use Tag icon
+                    business.category?.let { BusinessTag(icon = Lucide.Tag, text = it) }
                     business.location?.let { BusinessTag(icon = Lucide.MapPin, text = it) }
                     business.investmentRange?.let { BusinessTag(icon = Lucide.BadgeDollarSign, text = it) }
                     business.partnerCount?.let {
-                        // Only show if count is > 0 or handle 0 explicitly if needed
                         if (it > 0) {
                             BusinessTag(icon = Lucide.Users, text = "$it socios")
                         }
                     }
                 }
 
-                // --- Description ---
                 Text(
                     modifier = Modifier.padding(top = 9.dp),
                     text = business.description,
                     fontFamily = funnelSansFamily,
                     fontSize = 14.sp,
-                    maxLines = 3, // Limit description lines in card view
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     color = KoruDarkGray
                 )
 
-                // --- Business Model ---
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = "Modelo de negocio:",
                     color = KoruOrange,
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium, // Highlight label slightly
+                    fontWeight = FontWeight.Medium,
                     fontFamily = funnelSansFamily
                 )
                 Text(
-                    modifier = Modifier.padding(top = 4.dp), // Reduced padding
+                    modifier = Modifier.padding(top = 4.dp),
                     text = business.businessModel,
                     fontFamily = funnelSansFamily,
-                    fontSize = 14.sp, // Match description size
+                    fontSize = 14.sp,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                // --- Owner and Actions Footer ---
-                Divider(modifier = Modifier.padding(vertical = 10.dp), color = KoruGrayBackground) // Add visual separator
+                Divider(modifier = Modifier.padding(vertical = 10.dp), color = KoruGrayBackground)
 
                 Row(
                     modifier = Modifier
@@ -130,21 +120,20 @@ fun BusinessCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Owner Info
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f).padding(end = 8.dp) // Allow shrinking, add padding
+                        modifier = Modifier.weight(1f).padding(end = 8.dp)
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(business.ownerImageUrl ?: R.drawable.sample_profile) // Placeholder if null
+                                .data(business.ownerImageUrl ?: R.drawable.sample_profile)
                                 .crossfade(true)
-                                .transformations(coil3.transform.CircleCropTransformation()) // Circle crop
+                                .transformations(coil3.transform.CircleCropTransformation())
                                 .build(),
                             placeholder = painterResource(R.drawable.sample_profile),
                             error = painterResource(R.drawable.sample_profile),
                             contentDescription = "Owner Profile",
-                            modifier = Modifier.size(32.dp) // Slightly larger profile pic
+                            modifier = Modifier.size(32.dp)
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
@@ -159,40 +148,34 @@ fun BusinessCard(
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
-                        // Add Message/LinkedIn icons here if needed later
-                        // IconButton(...) { Icon(...) }
                     }
 
-                    // Action Icons (Like, Save)
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End // Align icons to the end
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        // Like Button (Placeholder - implement toggle visually later)
-                        IconButton(onClick = onLikeClick, modifier = Modifier.size(40.dp)) { // Consistent touch target size
+                        IconButton(onClick = onLikeClick, modifier = Modifier.size(40.dp)) {
                             Icon(
-                                if (business.isLiked) Lucide.Heart else Lucide.Heart, // Use filled icon when liked
+                                if (business.isLiked) Lucide.Heart else Lucide.Heart,
                                 contentDescription = "Like",
-                                tint = if (business.isLiked) KoruRed else KoruDarkGray, // Change color when liked
+                                tint = if (business.isLiked) KoruRed else KoruDarkGray,
                                 modifier = Modifier.size(21.dp)
                             )
                         }
-                        // Save Button with Count
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.clickable(onClick = onSaveClick) // Make row clickable
-                                .padding(start = 4.dp) // Add slight space from like
+                            modifier = Modifier.clickable(onClick = onSaveClick)
+                                .padding(start = 4.dp)
                         ) {
                             IconButton(onClick = onSaveClick, modifier = Modifier.size(40.dp)) {
                                 Icon(
-                                    if (business.isSaved) Lucide.BookmarkCheck else Lucide.Bookmark, // Use filled icon when saved
+                                    if (business.isSaved) Lucide.BookmarkCheck else Lucide.Bookmark,
                                     contentDescription = "Guardar",
-                                    tint = if (business.isSaved) KoruOrange else KoruDarkGray, // Change color when saved
+                                    tint = if (business.isSaved) KoruOrange else KoruDarkGray,
                                     modifier = Modifier.size(21.dp)
                                 )
                             }
                             business.savedCount?.let { count ->
-                                // Only show count if > 0, or adjust as needed
                                 if (count > 0) {
                                     Text(
                                         text = count.toString(),
@@ -200,7 +183,7 @@ fun BusinessCard(
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 14.sp,
                                         color = if (business.isSaved) KoruOrange else KoruDarkGray,
-                                        modifier = Modifier.padding(start = 0.dp, end = 4.dp) // Adjust padding
+                                        modifier = Modifier.padding(start = 0.dp, end = 4.dp)
                                     )
                                 }
                             }

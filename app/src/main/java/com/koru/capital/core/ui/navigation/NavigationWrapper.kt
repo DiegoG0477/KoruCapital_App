@@ -1,14 +1,13 @@
-// capital/core/ui/navigation/NavigationWrapper.kt
 package com.koru.capital.core.ui.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember // Asegúrate de importar remember
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel // Importar hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -22,7 +21,7 @@ import com.koru.capital.auth.presentation.login.ui.LoginScreen
 import com.koru.capital.auth.presentation.register.ui.basic.RegisterEmailPasswordScreen
 import com.koru.capital.auth.presentation.register.ui.personal.RegisterPersonalInfoScreen
 import com.koru.capital.auth.presentation.register.viewmodel.RegisterViewModel
-import com.koru.capital.business.presentation.ui.add.AddBusinessScreen // Importar AddBusinessScreen
+import com.koru.capital.business.presentation.ui.add.AddBusinessScreen
 import com.koru.capital.business.presentation.ui.detail.BusinessDetailScreen
 import com.koru.capital.business.presentation.ui.edit.EditBusinessScreen
 import com.koru.capital.business.presentation.ui.mine.MyBusinessesScreen
@@ -32,10 +31,7 @@ import com.koru.capital.profile.presentation.ui.EditProfileScreen
 import com.koru.capital.core.ui.theme.KoruOrange
 import com.koru.capital.profile.presentation.ui.myAcc.MyAccountScreen
 
-/**
- * Define el gráfico de navegación principal de la aplicación.
- * ... (resto de KDoc) ...
- */
+
 @Composable
 fun NavigationWrapper(
     navController: NavHostController,
@@ -47,14 +43,12 @@ fun NavigationWrapper(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        // --- Pantalla de Carga Inicial ---
         composable(Routes.INITIAL_LOADING) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = KoruOrange)
             }
         }
 
-        // --- Flujo de Autenticación (Login) ---
         composable(Routes.LOGIN_SCREEN) {
             LoginScreen(
                 onLoginSuccess = {
@@ -69,7 +63,6 @@ fun NavigationWrapper(
             )
         }
 
-        // --- Flujo de Autenticación (Register - Grafo Anidado) ---
         navigation(
             startDestination = Routes.REGISTER_EMAIL_PASSWORD_SCREEN,
             route = "register_graph"
@@ -107,9 +100,8 @@ fun NavigationWrapper(
                     }
                 )
             }
-        } // Fin del grafo "register_graph"
+        }
 
-        // --- Flujos Home, MyBusinesses, MyAccount (Graphs) ---
         navigation(
             startDestination = Routes.HOME_SCREEN,
             route = Routes.HOME
@@ -126,17 +118,6 @@ fun NavigationWrapper(
             }
         }
 
-        // --- ELIMINAR GRAFO DE SAVED ---
-        /*
-        navigation(
-            startDestination = Routes.SAVED_SCREEN,
-            route = Routes.SAVED
-        ) {
-            composable(Routes.SAVED_SCREEN) {
-                PlaceholderScreen(screenName = "Guardados")
-            }
-        }
-        */
 
         navigation(
             startDestination = Routes.MY_BUSINESSES_SCREEN,
@@ -150,12 +131,6 @@ fun NavigationWrapper(
                     }
                 )
             }
-            // *** MOVER ADD_BUSINESS_SCREEN FUERA DE ESTE GRAFO ***
-            /*
-            composable(Routes.ADD_BUSINESS_SCREEN) {
-                AddBusinessScreen(onBackClick = { navController.popBackStack() })
-            }
-            */
             composable(
                 route = Routes.EDIT_BUSINESS_SCREEN,
                 arguments = listOf(navArgument("businessId") { type = NavType.StringType })
@@ -200,9 +175,7 @@ fun NavigationWrapper(
             }
         }
 
-        // --- Pantallas Standalone o Movidas a Nivel Superior ---
 
-        // *** AÑADIR AddBusinessScreen AQUÍ COMO DESTINO DE NIVEL SUPERIOR ***
         composable(Routes.ADD_BUSINESS_SCREEN) {
             AddBusinessScreen(onBackClick = { navController.popBackStack() })
         }
@@ -222,5 +195,5 @@ fun NavigationWrapper(
             }
         }
 
-    } // Fin NavHost
+    }
 }

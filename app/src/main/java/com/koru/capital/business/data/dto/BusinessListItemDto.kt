@@ -2,11 +2,7 @@ package com.koru.capital.business.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-/**
- * Data Transfer Object para representar un elemento simplificado de negocio
- * en listas, como la de "Mis Negocios".
- * Coincide con BusinessListItemUiModel de la app.
- */
+
 data class BusinessListItemDto(
     @SerializedName("id")
     val id: String,
@@ -14,16 +10,15 @@ data class BusinessListItemDto(
     @SerializedName("name")
     val name: String,
 
-    @SerializedName("imageUrl") // API puede devolver null
+    @SerializedName("imageUrl")
     val imageUrl: String?,
 
-    // La API devuelve categoryName y locationName (municipio, estado)
-    @SerializedName("category") // Campo esperado por UIModel
+    @SerializedName("category")
     val category: String?,
 
-    @SerializedName("location") // Campo esperado por UIModel
+    @SerializedName("location")
     val location: String?,
 
-    @SerializedName("isOwned") // Indica si el negocio pertenece al usuario que consulta
+    @SerializedName("isOwned")
     val isOwned: Boolean
 )

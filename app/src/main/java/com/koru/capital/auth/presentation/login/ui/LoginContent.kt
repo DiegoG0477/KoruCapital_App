@@ -22,19 +22,17 @@ fun LoginScreenContent(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
-        // Login screen typically doesn't have top/bottom bars managed by Scaffold itself
-        // unless you want a consistent app bar style. The content itself has top/bottom sections.
         modifier = modifier
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues) // Use padding from Scaffold if needed
+                .padding(paddingValues)
         ) {
             LoginTop(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // Adjust weight as needed
+                    .weight(1f)
             )
             LoginBody(
                 uiState = uiState,
@@ -43,9 +41,9 @@ fun LoginScreenContent(
                 onLoginClick = onLoginClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(3f) // Adjust weight as needed
+                    .weight(3f)
             )
-            LoginBottom( // Pass the navigation lambda
+            LoginBottom(
                 onNavigateToRegister = onNavigateToRegister
             )
         }

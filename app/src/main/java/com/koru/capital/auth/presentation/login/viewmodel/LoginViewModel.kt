@@ -14,7 +14,7 @@ data class LoginUiState(
     val password: String = "",
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val isLoginSuccess: Boolean = false // Flag para indicar éxito
+    val isLoginSuccess: Boolean = false
 )
 
 @HiltViewModel
@@ -25,9 +25,6 @@ class LoginViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    // Podríamos usar un SharedFlow para eventos de navegación si se prefiere
-    // private val _navigationEvent = MutableSharedFlow<Unit>()
-    // val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun onEmailChanged(email: String) {
         _uiState.update { it.copy(email = email, errorMessage = null) }
@@ -41,7 +38,6 @@ class LoginViewModel @Inject constructor(
         val currentState = _uiState.value
         val credentials = LoginCredentials(currentState.email, currentState.password)
 
-        // Validación básica en VM (o confiar en UseCase)
         if (credentials.email.isBlank() || credentials.password.isBlank()) {
             _uiState.update { it.copy(errorMessage = "Correo y contraseña son requeridos.") }
             return
@@ -52,14 +48,8 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase(credentials).fold(
                 onSuccess = { authToken ->
-                    // Login exitoso, token guardado por Repository/UseCase
                     _uiState.update { it.copy(isLoading = false, isLoginSuccess = true) }
-                    // Resetear isLoginSuccess después de un pequeño delay o en el LaunchedEffect de la Screen
-                    // kotlinx.coroutines.delay(100)
-                    // _uiState.update { it.copy(isLoginSuccess = false) }
 
-                    // O emitir evento de navegación
-                    // _navigationEvent.emit(Unit)
                 },
                 onFailure = { exception ->
                     _uiState.update {
